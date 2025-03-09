@@ -1,5 +1,8 @@
 #include "raylib.h"
 
+#include "entity.hpp"
+#include "world.hpp"
+
 int main()
 {
     const int screenWidth = 1000;
@@ -14,18 +17,24 @@ int main()
         20.0f,
         CAMERA_ORTHOGRAPHIC
     };
-    Model model = LoadModel("../../assets/part.obj");
-    Texture2D texture = LoadTexture("../../assets/texture.jpg");
-    model.materials[0].maps->texture = texture;
+    Model model = LoadModel("assets/part.obj");
+
+    Image image = GenImageCellular(20, 20, 10);
+    Texture2D texture = LoadTextureFromImage(image);
+    SetMaterialTexture(model.materials, MATERIAL_MAP_ALBEDO, texture);
     Vector3 position = { 0.0f, 2.0f, 0.0f };
-    
+
+    World world = World();
+    Entity entity = Entity(model, position);
+    world.spawnEntity(entity);
+
     while (!WindowShouldClose())
     {
         BeginDrawing();
         ClearBackground(GetColor(0x181818ff));
         BeginMode3D(camera);
-
-        DrawModel(model, {0,0,0}, 1.0f, WHITE);
+        
+        world.draw();
 
         EndMode3D();
         EndDrawing();
