@@ -12,9 +12,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(raylib)
 
-set(PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/sources/")
-
 add_executable(motorola_contest src/main.cpp)
 target_include_directories(motorola_contest PRIVATE ${PROJECT_INCLUDE})
+
+target_compile_definitions(motorola_contest PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
+
 target_link_libraries(motorola_contest PRIVATE raylib)
+
+file(COPY assets DESTINATION "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}")
 
