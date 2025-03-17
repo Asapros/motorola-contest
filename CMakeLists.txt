@@ -5,6 +5,8 @@ project(motorola_contest)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 include(FetchContent)
 FetchContent_Declare(
 	raylib
@@ -22,6 +24,7 @@ add_executable(motorola_contest ${PROJECT_SOURCES})
 # target_compile_definitions(motorola_contest PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
 
 target_link_libraries(motorola_contest PRIVATE raylib)
+target_include_directories(motorola_contest PRIVATE "${raylib_SOURCE_DIR}/src")
 
 # file(COPY assets DESTINATION "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}")
 add_custom_target(copy_assets
