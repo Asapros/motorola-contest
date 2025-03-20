@@ -23,6 +23,12 @@ add_executable(motorola_contest ${PROJECT_SOURCES})
 
 # target_compile_definitions(motorola_contest PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
 
+# Tests
+file(GLOB_RECURSE TESTS_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/tests/*.cpp")
+add_executable(all-tests ${TESTS_SOURCES})
+add_test(NAME all-tests COMMAND all-tests)
+enable_testing()
+
 target_link_libraries(motorola_contest PRIVATE raylib)
 target_include_directories(motorola_contest PRIVATE "${raylib_SOURCE_DIR}/src")
 
