@@ -17,20 +17,26 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(raylib)
 
-file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
-add_executable(motorola_contest ${PROJECT_SOURCES})
+file(GLOB_RECURSE project_sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
+add_executable(motorola_contest ${project_sources})
 # target_include_directories(motorola_contest PRIVATE "lib/")
+target_link_libraries(motorola_contest PRIVATE raylib)
+target_include_directories(motorola_contest PRIVATE "${raylib_SOURCE_DIR}/src")
 
 # target_compile_definitions(motorola_contest PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
 
 # Tests
 file(GLOB_RECURSE TESTS_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/tests/*.cpp")
-add_executable(all-tests ${TESTS_SOURCES})
+set(project_sources_without_main ${project_sources})
+file(GLOB_RECURSE main_file CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/main.cpp")
+list(REMOVE_ITEM project_sources_without_main ${main_file})
+message("project_sources_without_main=${project_sources_without_main}")
+add_executable(all-tests ${TESTS_SOURCES} ${project_sources_without_main})
+target_link_libraries(all-tests PRIVATE raylib)
+target_include_directories(all-tests PRIVATE "src" "${raylib_SOURCE_DIR}/src")
 add_test(NAME all-tests COMMAND all-tests)
 enable_testing()
 
-target_link_libraries(motorola_contest PRIVATE raylib)
-target_include_directories(motorola_contest PRIVATE "${raylib_SOURCE_DIR}/src")
 
 # file(COPY assets DESTINATION "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}")
 add_custom_target(copy_assets
