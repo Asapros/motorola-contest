@@ -1,20 +1,18 @@
 #include "world.hpp"
 #include "entity.hpp"
 
-World::World() {
-
-}
+World::World() {}
 
 void World::update() {
-	for (auto& [entityId, entity] : entities) {
-		entity.update();
-	}
+    for (auto& [entityId, entity] : entities) {
+        entity.update();
+    }
 }
 
 void World::draw() {
-	for (auto& [entityId, entity] : entities) {
-		entity.draw();
-	}
+    for (auto& [entityId, entity] : entities) {
+        entity.draw();
+    }
 }
 
 EntityId World::newEntityId() {

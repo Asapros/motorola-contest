@@ -5,7 +5,7 @@
 class Rigidbody : public Entity {
     Vector3 velocity;
 
-    public:
+   public:
     unsigned int mass;
 
     Rigidbody(Model& model, Vector3 position, unsigned int mass);
