@@ -2,7 +2,7 @@
 #include "raylib.h"
 #include "raymath.h"
 
-Rigidbody::Rigidbody(Model& model, Vector3 position, unsigned int mass)
+Rigidbody::Rigidbody(Model& model, Vector3 position, float mass)
     : Entity(model, position), velocity({0, 0, 0}), mass(mass) {};
 
 void Rigidbody::update() {
@@ -11,5 +11,5 @@ void Rigidbody::update() {
 
 void Rigidbody::applyForce(Vector3 force) {
     this->velocity =
-        Vector3Add(this->velocity, Vector3Scale(force, 1 / this->mass));
+        Vector3Add(this->velocity, Vector3Scale(force, 1.0 / this->mass));
 }

@@ -22,7 +22,7 @@ int main() {
     Vector3 position = {0.0f, 2.0f, 0.0f};
 
     World world = World();
-    Rigidbody entity = Rigidbody(model, position, 1);
+    Rigidbody entity = Rigidbody(model, position, 1.0);
     world.spawnEntity(entity);
 
     while (!WindowShouldClose()) {
