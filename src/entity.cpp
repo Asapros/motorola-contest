@@ -3,12 +3,7 @@
 #include "world.hpp"
 #include "entity.hpp"
 
-Entity::Entity(Model& _model, Vector3 position): model(_model) {
-    // this->model = model;
-    this->world = nullptr;
-    this->eid = 0;
-    this->position = position;
-};
+Entity::Entity(Model& model, Vector3 position): model(model), world(nullptr), eid(0), position(position) {};
 
 void Entity::update() {
 
