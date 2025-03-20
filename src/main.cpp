@@ -1,6 +1,6 @@
 #include "raylib.h"
-
 #include "entity.hpp"
+#include "rigidbody.hpp"
 #include "world.hpp"
 
 int main()
@@ -25,15 +25,20 @@ int main()
     Vector3 position = { 0.0f, 2.0f, 0.0f };
 
     World world = World();
-    Entity entity = Entity(model, position);
+    Rigidbody entity = Rigidbody(model, position, 1);
     world.spawnEntity(entity);
 
     while (!WindowShouldClose())
     {
+        if (IsKeyDown(KEY_A)) {
+            entity.applyForce({0.0, 1.0, 0.0});
+        }
+        world.update();
+
         BeginDrawing();
         ClearBackground(GetColor(0x181818ff));
         BeginMode3D(camera);
-        
+
         world.draw();
 
         EndMode3D();
