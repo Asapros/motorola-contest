@@ -3,6 +3,7 @@
 #include "entity.hpp"
 
 class Rigidbody : public Entity {
+   private:
     Vector3 momentum;
 
    public:

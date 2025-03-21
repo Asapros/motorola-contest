@@ -6,6 +6,8 @@ Rigidbody::Rigidbody(Model& model, Vector3 position, float mass)
     : Entity(model, position), momentum({0, 0, 0}), mass(mass) {};
 
 void Rigidbody::update() {
+    Entity::update();
+
     Vector3 velocity = computeVelocity();
     this->position = Vector3Add(this->position, velocity);
 }
