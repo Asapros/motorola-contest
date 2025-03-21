@@ -1,17 +1,19 @@
-#include "world.hpp"
+#include <memory>
+
 #include "entity.hpp"
+#include "world.hpp"
 
 World::World() {}
 
 void World::update() {
     for (auto& [entityId, entity] : entities) {
-        entity.update();
+        entity->update();
     }
 }
 
 void World::draw() {
     for (auto& [entityId, entity] : entities) {
-        entity.draw();
+        entity->draw();
     }
 }
 
@@ -21,8 +23,8 @@ EntityId World::newEntityId() {
     return id;
 }
 
-void World::spawnEntity(Entity entity) {
-    entity.eid = newEntityId();
-    entity.world = this;
-    this->entities.emplace(entity.eid, entity);
+void World::spawnEntity(std::shared_ptr<Entity> entity) {
+    entity->eid = newEntityId();
+    entity->world = this;
+    this->entities.emplace(entity->eid, entity);
 }

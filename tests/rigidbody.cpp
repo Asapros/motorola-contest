@@ -1,11 +1,15 @@
+#include <memory>
+
 #include <raylib.h>
-#include <rigidbody.hpp>
+
+#include "rigidbody.hpp"
 #include "world.hpp"
 
 void rigidbody_test() {
     InitWindow(100, 100, "rigidbody_test");
     Model model = LoadModel("assets/part.obj");
-    Rigidbody rb(model, {0, 0, 0}, 1.0);
+    std::shared_ptr<Rigidbody> rb =
+        std::make_shared<Rigidbody>(model, Vector3{0, 0, 0}, 1.0);
     World world;
     world.spawnEntity(rb);
     Camera camera = {{20.0f, 20.0f, 20.0f},

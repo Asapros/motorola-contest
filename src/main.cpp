@@ -22,12 +22,13 @@ int main() {
     Vector3 position = {0.0f, 2.0f, 0.0f};
 
     World world = World();
-    Rigidbody entity = Rigidbody(model, position, 1.0);
+    std::shared_ptr<Rigidbody> entity =
+        std::make_shared<Rigidbody>(model, position, 1.0);
     world.spawnEntity(entity);
 
     while (!WindowShouldClose()) {
         if (IsKeyDown(KEY_A)) {
-            entity.applyForce({0.0, 1.0, 0.0});
+            entity->applyForce({0.0, 0.0001, 0.0});
         }
         world.update();
 
