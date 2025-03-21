@@ -3,7 +3,7 @@
 #include "entity.hpp"
 
 class Rigidbody : public Entity {
-    Vector3 velocity;
+    Vector3 momentum;
 
    public:
     float mass;
@@ -11,5 +11,6 @@ class Rigidbody : public Entity {
     Rigidbody(Model& model, Vector3 position, float mass);
 
     void update();
-    void applyForce(Vector3 force);
+    void applyForce(Vector3 force, float time);
+    Vector3 computeVelocity();
 };

@@ -27,8 +27,10 @@ int main() {
     world.spawnEntity(entity);
 
     while (!WindowShouldClose()) {
+        float delta_time = GetFrameTime();
+
         if (IsKeyDown(KEY_A)) {
-            entity->applyForce({0.0, 0.0001, 0.0});
+            entity->applyForce({0.0, 0.005, 0.0}, delta_time);
         }
         world.update();
 
