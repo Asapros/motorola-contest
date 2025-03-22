@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iostream>
 
 #include <raylib.h>
 #include <raymath.h>
@@ -15,16 +16,28 @@ float PortedVector2CrossProduct(Vector2 v1, Vector2 v2) {
     return result;
 }
 
+Vehicle::Vehicle(Model& model,
+                 Vector3 position,
+                 float mass,
+                 float moment_of_intertia,
+                 std::vector<Wheel> wheels)
+    : Rigidbody(model, position, mass),
+      angular_momentum(0.0),
+      moment_of_intertia(moment_of_intertia),
+      wheels(wheels) {}
+
 void Vehicle::update(float delta_time) {
     Rigidbody::update(delta_time);
 
     heading += angular_momentum / moment_of_intertia;
+    std::cerr << "heading = " << heading << '\n';
 
     Vector3 velocity = computeVelocity();
 
     float grav_force = mass * GRAVITY_ACCELERATION;
 
     float torque = 0.0;
+    Vector2 force = {0.0, 0.0};
 
     for (auto& wheel : wheels) {
         // Velocity of the bottom point on the wheel
@@ -39,6 +52,8 @@ void Vehicle::update(float delta_time) {
         Vector2 delta_velocity =
             Vector2Subtract({velocity.x, velocity.y}, bottom_velocity_rel_vec);
         float delta_velocity_len = Vector2Length(delta_velocity);
+
+        std::cerr << "delta_velocity_len = " << delta_velocity_len << '\n';
 
         // TODO: determine from tire and ground material
         float static_friction_coef = 0.8;
@@ -55,11 +70,17 @@ void Vehicle::update(float delta_time) {
             Vector2Rotate(wheel.position_relative, heading);
 
         float cos_wheel_heading_friction_force =
-            Vector2DotProduct(wheel_heading_vec, friction_dir);
+            std::abs(Vector2DotProduct(wheel_heading_vec, friction_dir));
+        std::cerr << "cos_wheel_heading_friction_force = "
+                  << cos_wheel_heading_friction_force << '\n';
         float cos_wheel_pos_friction_force =
-            Vector2DotProduct(wheel_position_rotated, friction_dir);
-        float sin_wheel_pos_friction_force =
-            PortedVector2CrossProduct(wheel_position_rotated, friction_dir);
+            std::abs(Vector2DotProduct(wheel_position_rotated, friction_dir));
+        std::cerr << "cos_wheel_pos_friction_force = "
+                  << cos_wheel_pos_friction_force << '\n';
+        float sin_wheel_pos_friction_force = std::abs(
+            PortedVector2CrossProduct(wheel_position_rotated, friction_dir));
+        std::cerr << "sin_wheel_pos_friction_force = "
+                  << sin_wheel_pos_friction_force << '\n';
 
         float wheel_ang_acc_required_to_stop =
             delta_velocity_len / (wheel.radius * delta_time);
@@ -70,21 +91,35 @@ void Vehicle::update(float delta_time) {
               wheel.radius)) +
             (vehicle_acc_required_to_stop * mass /
              std::max<float>(cos_wheel_pos_friction_force, 1.0e9));
+        std::cerr << "friction_required_to_stop = " << friction_required_to_stop
+                  << '\n';
 
         float actual_friction;
         if (friction_required_to_stop <= max_static_friction) {
             actual_friction = friction_required_to_stop;
+            std::cerr << "static_friction\n";
         } else {
             actual_friction = kinetic_friction;
+            std::cerr << "kinetic_friction\n";
         }
+        std::cerr << "actual_friction = " << actual_friction << '\n';
 
         // Apply forces and torques
         wheel.angular_velocity +=
             actual_friction * cos_wheel_heading_friction_force * wheel.radius *
             delta_time / wheel.moment_of_intertia;
-        applyForce(Vector3Scale(Vector3{friction_dir.x, friction_dir.y, 0.0},
-                                actual_friction),
-                   delta_time);
-        /*torque += */
+        force = Vector2Add(force, Vector2Scale(friction_dir, actual_friction));
+        torque += Vector2Length(wheel.position_relative) * actual_friction *
+                  sin_wheel_pos_friction_force;
     }
+
+    applyForce(Vector3{force.x, force.y}, delta_time);
+    angular_momentum += torque / moment_of_intertia;
+
+    std::cerr << '\n';
+}
+
+void Vehicle::draw() {
+    DrawModelEx(model, position, Vector3{0.0, 0.0, 1.0}, heading,
+                Vector3{1.0, 1.0, 1.0}, WHITE);
 }

@@ -19,5 +19,5 @@ class Entity {
     Entity(Model& model, Vector3 position);
 
     virtual void update(float delta_time);
-    void draw();
+    virtual void draw();
 };

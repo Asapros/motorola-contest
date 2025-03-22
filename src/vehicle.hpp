@@ -13,13 +13,19 @@ struct Wheel {
     Vector2 position_relative;
 };
 
-class Vehicle : Rigidbody {
+class Vehicle : public Rigidbody {
    private:
     float heading;
     float angular_momentum;
     float moment_of_intertia;
-    std::vector<Wheel> wheels;
 
    public:
+    std::vector<Wheel> wheels;
     void update(float delta_time);
+    void draw();
+    Vehicle(Model& model,
+            Vector3 position,
+            float mass,
+            float moment_of_intertia,
+            std::vector<Wheel> wheels);
 };
