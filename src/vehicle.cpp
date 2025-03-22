@@ -29,7 +29,12 @@ Vehicle::Vehicle(Model& model,
 void Vehicle::update(float delta_time) {
     Rigidbody::update(delta_time);
 
+    // Angular momentum drag
+    angular_momentum *= std::pow(0.75, delta_time);
+    std::cerr << "angular_momentum = " << angular_momentum << '\n';
+
     heading += angular_momentum / moment_of_intertia;
+    heading = fmod(heading, 2 * PI);
     std::cerr << "heading = " << heading << '\n';
 
     Vector3 velocity = computeVelocity();
@@ -55,8 +60,16 @@ void Vehicle::update(float delta_time) {
         Vector2 bottom_velocity_rel_vec =
             Vector2Scale(wheel_heading_vec, bottom_velocity_rel);
 
+        Vector2 velocity_with_rot = Vector2Add(
+            Vector2{velocity.x, velocity.y},
+            Vector2Scale(
+                Vector2Rotate(Vector2Normalize(wheel.position_relative),
+                              heading + PI / 2.0),
+                angular_momentum * Vector2Length(wheel.position_relative) /
+                    moment_of_intertia));
+
         Vector2 delta_velocity =
-            Vector2Subtract({velocity.x, velocity.y}, bottom_velocity_rel_vec);
+            Vector2Subtract(velocity_with_rot, bottom_velocity_rel_vec);
         float delta_velocity_len = Vector2Length(delta_velocity);
 
         std::cerr << "delta_velocity_len = " << delta_velocity_len << '\n';
@@ -134,12 +147,12 @@ void Vehicle::update(float delta_time) {
             delta_time / (wheel.moment_of_intertia * 3.0);
         force = Vector2Add(force,
                            Vector2Scale(friction_dir, -actual_friction / 3.0));
-        torque += Vector2Length(wheel.position_relative) * actual_friction *
+        torque -= Vector2Length(wheel.position_relative) * actual_friction *
                   sin_wheel_pos_friction_force / 3.0;
     }
 
     applyForce(Vector3{force.x, force.y}, delta_time);
-    angular_momentum += torque / moment_of_intertia;
+    angular_momentum += torque * delta_time;
 
     std::cerr << "velocity_len = " << Vector3Length(computeVelocity()) << '\n';
 
@@ -147,6 +160,6 @@ void Vehicle::update(float delta_time) {
 }
 
 void Vehicle::draw() {
-    DrawModelEx(model, position, Vector3{0.0, 1.0, 0.0}, heading,
+    DrawModelEx(model, position, Vector3{0.0, 1.0, 0.0}, heading * 180.0 / PI,
                 Vector3{1.0, 1.0, 1.0}, WHITE);
 }

@@ -31,8 +31,10 @@ int main() {
     World world = World();
     std::shared_ptr<Vehicle> entity = std::make_shared<Vehicle>(
         model, position, 1.0, 1.0,
-        std::vector<Wheel>{{0.02, 0.0, 0.2, 0.0, {0.0, 0.5}},
-                           {0.02, 0.0, 0.2, 0.0, {0.0, -0.5}}});
+        std::vector<Wheel>{{0.02, 0.0, 0.2, 0.0, {0.5, 1.0}},
+                           {0.02, 0.0, 0.2, 0.0, {-0.5, 1.0}},
+                           {0.02, 0.0, 0.2, 0.0, {0.5, -1.0}},
+                           {0.02, 0.0, 0.2, 0.0, {-0.5, -1.0}}});
     world.spawnEntity(std::dynamic_pointer_cast<Entity>(entity));
 
     while (!WindowShouldClose()) {
@@ -50,18 +52,20 @@ int main() {
                 wheel.angular_velocity -= 0.5 * delta_time;
             }
             if (i < 2) {
+                const float steering_rate = 0.8;
+                float target_steering;
                 if (IsKeyDown(KEY_A)) {
-                    wheel.steering =
-                        (wheel.steering * (1 - std::pow(0.5, delta_time))) +
-                        (0.8 * std::pow(0.5, delta_time));
+                    target_steering = 0.8;
                 } else if (IsKeyDown(KEY_D)) {
-                    wheel.steering =
-                        (wheel.steering * (1 - std::pow(0.5, delta_time))) +
-                        (-0.8 * std::pow(0.5, delta_time));
+                    target_steering = -0.8;
                 } else {
-                    wheel.steering =
-                        (wheel.steering * (1 - std::pow(0.5, delta_time))) +
-                        (0.0 * std::pow(0.5, delta_time));
+                    target_steering = 0.0;
+                }
+
+                if (target_steering > wheel.steering) {
+                    wheel.steering += steering_rate * delta_time;
+                } else {
+                    wheel.steering -= steering_rate * delta_time;
                 }
             }
         }
