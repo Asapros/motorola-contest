@@ -17,7 +17,7 @@ int main() {
     Camera camera = {{20.0f, 20.0f, 20.0f},
                      {0.0f, 0.0f, 0.0f},
                      {0.0f, 1.0f, 0.0f},
-                     20.0f,
+                     40.0f,
                      CAMERA_ORTHOGRAPHIC};
     Model model = LoadModel("assets/part.obj");
 
@@ -41,12 +41,12 @@ int main() {
         }
         if (IsKeyDown(KEY_W)) {
             for (auto& wheel : entity->wheels) {
-                wheel.angular_velocity += 2.0 * delta_time;
+                wheel.angular_velocity += 0.02 * delta_time;
             }
         }
         if (IsKeyDown(KEY_S)) {
             for (auto& wheel : entity->wheels) {
-                wheel.angular_velocity -= 2.0 * delta_time;
+                wheel.angular_velocity -= 0.02 * delta_time;
             }
         }
 
