@@ -1,5 +1,7 @@
+#include <cmath>
 #include <memory>
 #include <vector>
+
 #include "raylib.h"
 
 #include "entity.hpp"
@@ -36,17 +38,31 @@ int main() {
     while (!WindowShouldClose()) {
         float delta_time = GetFrameTime();
 
-        if (IsKeyDown(KEY_A)) {
-            entity->applyForce({0.0, 0.005, 0.0}, delta_time);
-        }
-        if (IsKeyDown(KEY_W)) {
-            for (auto& wheel : entity->wheels) {
-                wheel.angular_velocity += 0.02 * delta_time;
+        /*if (IsKeyDown(KEY_A)) {*/
+        /*    entity->applyForce({0.0, 0.005, 0.0}, delta_time);*/
+        /*}*/
+        for (uint32_t i = 0; i < entity->wheels.size(); i++) {
+            auto& wheel = entity->wheels[i];
+            if (IsKeyDown(KEY_W)) {
+                wheel.angular_velocity += 0.5 * delta_time;
             }
-        }
-        if (IsKeyDown(KEY_S)) {
-            for (auto& wheel : entity->wheels) {
-                wheel.angular_velocity -= 0.02 * delta_time;
+            if (IsKeyDown(KEY_S)) {
+                wheel.angular_velocity -= 0.5 * delta_time;
+            }
+            if (i < 2) {
+                if (IsKeyDown(KEY_A)) {
+                    wheel.steering =
+                        (wheel.steering * (1 - std::pow(0.5, delta_time))) +
+                        (0.8 * std::pow(0.5, delta_time));
+                } else if (IsKeyDown(KEY_D)) {
+                    wheel.steering =
+                        (wheel.steering * (1 - std::pow(0.5, delta_time))) +
+                        (-0.8 * std::pow(0.5, delta_time));
+                } else {
+                    wheel.steering =
+                        (wheel.steering * (1 - std::pow(0.5, delta_time))) +
+                        (0.0 * std::pow(0.5, delta_time));
+                }
             }
         }
 
