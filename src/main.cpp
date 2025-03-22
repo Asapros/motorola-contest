@@ -32,7 +32,7 @@ int main() {
         if (IsKeyDown(KEY_A)) {
             entity->applyForce({0.0, 0.005, 0.0}, delta_time);
         }
-        world.update();
+        world.update(delta_time);
 
         BeginDrawing();
         ClearBackground(GetColor(0x181818ff));

@@ -18,6 +18,6 @@ class World {
     World();
     EntityId newEntityId();
     void spawnEntity(std::shared_ptr<Entity> entity);
-    void update();
+    void update(float delta_time);
     void draw();
 };

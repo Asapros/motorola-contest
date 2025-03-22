@@ -5,8 +5,8 @@
 Rigidbody::Rigidbody(Model& model, Vector3 position, float mass)
     : Entity(model, position), momentum({0, 0, 0}), mass(mass) {};
 
-void Rigidbody::update() {
-    Entity::update();
+void Rigidbody::update(float delta_time) {
+    Entity::update(delta_time);
 
     Vector3 velocity = computeVelocity();
     this->position = Vector3Add(this->position, velocity);

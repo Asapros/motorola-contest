@@ -5,9 +5,9 @@
 
 World::World() {}
 
-void World::update() {
+void World::update(float delta_time) {
     for (auto& [entityId, entity] : entities) {
-        entity->update();
+        entity->update(delta_time);
     }
 }
 

@@ -11,7 +11,7 @@ class Rigidbody : public Entity {
 
     Rigidbody(Model& model, Vector3 position, float mass);
 
-    void update();
+    void update(float delta_time);
     void applyForce(Vector3 force, float time);
     Vector3 computeVelocity();
 };

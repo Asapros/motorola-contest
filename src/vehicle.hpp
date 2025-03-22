@@ -9,6 +9,8 @@ struct Wheel {
     float moment_of_intertia;
     float angular_velocity;
     float radius;
+    float steering;
+    Vector2 position_relative;
 };
 
 class Vehicle : Rigidbody {
@@ -19,5 +21,5 @@ class Vehicle : Rigidbody {
     std::vector<Wheel> wheels;
 
    public:
-    void update();
+    void update(float delta_time);
 };

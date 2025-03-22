@@ -19,7 +19,7 @@ void rigidbody_test() {
                      CAMERA_ORTHOGRAPHIC};
 
     for (uint32_t i = 0; i < 100; i++) {
-        world.update();
+        world.update(GetFrameTime());
 
         BeginDrawing();
         BeginMode3D(camera);
