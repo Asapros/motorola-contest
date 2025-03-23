@@ -16,10 +16,10 @@ int main() {
     SetTargetFPS(60);
     InitWindow(screenWidth, screenHeight, "kubica");
     SetExitKey(KEY_ESCAPE);
-    Camera camera = {{20.0f, 20.0f, 20.0f},
+    Camera camera = {{30.0f, 30.0f, 30.0f},
                      {0.0f, 0.0f, 0.0f},
                      {0.0f, 1.0f, 0.0f},
-                     40.0f,
+                     60.0f,
                      CAMERA_ORTHOGRAPHIC};
     Model model = LoadModel("assets/car_prototype.glb");
 
@@ -30,11 +30,11 @@ int main() {
 
     World world = World();
     std::shared_ptr<Vehicle> entity = std::make_shared<Vehicle>(
-        model, position, 1.0, 1.0,
-        std::vector<Wheel>{{0.02, 0.0, 0.2, 0.0, {0.5, 1.0}},
-                           {0.02, 0.0, 0.2, 0.0, {0.5, -1.0}},
-                           {0.02, 0.0, 0.2, 0.0, {-0.5, 1.0}},
-                           {0.02, 0.0, 0.2, 0.0, {-0.5, -1.0}}});
+        model, position, 10.0, 10.0,
+        std::vector<Wheel>{{1.0, 0.0, 0.2, 0.0, {0.5, 1.0}},
+                           {1.0, 0.0, 0.2, 0.0, {0.5, -1.0}},
+                           {1.0, 0.0, 0.2, 0.0, {-0.5, 1.0}},
+                           {1.0, 0.0, 0.2, 0.0, {-0.5, -1.0}}});
     world.spawnEntity(std::dynamic_pointer_cast<Entity>(entity));
 
     while (!WindowShouldClose()) {
@@ -45,19 +45,20 @@ int main() {
         /*}*/
         for (uint32_t i = 0; i < entity->wheels.size(); i++) {
             auto& wheel = entity->wheels[i];
+            const float engine_torque = 2.0;
             if (IsKeyDown(KEY_W)) {
-                wheel.angular_velocity += 0.5 * delta_time;
+                wheel.angular_velocity += engine_torque * delta_time;
             }
             if (IsKeyDown(KEY_S)) {
-                wheel.angular_velocity -= 0.5 * delta_time;
+                wheel.angular_velocity -= engine_torque * delta_time;
             }
             if (i < 2) {
                 const float steering_rate = 0.8;
                 float target_steering;
                 if (IsKeyDown(KEY_A)) {
-                    target_steering = 0.8;
-                } else if (IsKeyDown(KEY_D)) {
                     target_steering = -0.8;
+                } else if (IsKeyDown(KEY_D)) {
+                    target_steering = 0.8;
                 } else {
                     target_steering = 0.0;
                 }

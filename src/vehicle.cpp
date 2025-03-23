@@ -30,7 +30,7 @@ void Vehicle::update(float delta_time) {
     Rigidbody::update(delta_time);
 
     // Angular momentum drag
-    angular_momentum *= std::pow(0.75, delta_time);
+    angular_momentum *= std::pow(0.85, delta_time);
     std::cerr << "angular_momentum = " << angular_momentum << '\n';
 
     heading += angular_momentum / moment_of_intertia;
@@ -46,7 +46,7 @@ void Vehicle::update(float delta_time) {
 
     for (auto& wheel : wheels) {
         // Drag
-        wheel.angular_velocity *= std::pow(0.75, delta_time);
+        wheel.angular_velocity *= std::pow(0.95, delta_time);
 
         std::cerr << "angular_velocity = " << wheel.angular_velocity << '\n';
         std::cerr << "steering = " << wheel.steering << '\n';
