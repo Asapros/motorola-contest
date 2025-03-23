@@ -61,7 +61,7 @@ void Vehicle::update(float delta_time) {
             Vector2Scale(wheel_heading_vec, bottom_velocity_rel);
 
         Vector2 velocity_with_rot = Vector2Add(
-            Vector2{velocity.x, velocity.y},
+            Vector2{velocity.x, velocity.z},
             Vector2Scale(
                 Vector2Rotate(Vector2Normalize(wheel.position_relative),
                               heading + PI / 2.0),
@@ -151,7 +151,7 @@ void Vehicle::update(float delta_time) {
                   sin_wheel_pos_friction_force / 3.0;
     }
 
-    applyForce(Vector3{force.x, force.y}, delta_time);
+    applyForce(Vector3{force.x, 0.0, force.y}, delta_time);
     angular_momentum += torque * delta_time;
 
     std::cerr << "velocity_len = " << Vector3Length(computeVelocity()) << '\n';

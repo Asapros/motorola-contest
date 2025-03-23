@@ -78,6 +78,8 @@ int main() {
 
         world.draw();
 
+        DrawGrid(25, 2.0);
+
         EndMode3D();
         EndDrawing();
     }
