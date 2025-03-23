@@ -21,19 +21,19 @@ int main() {
                      {0.0f, 1.0f, 0.0f},
                      40.0f,
                      CAMERA_ORTHOGRAPHIC};
-    Model model = LoadModel("assets/part.obj");
+    Model model = LoadModel("assets/car_prototype.glb");
 
     Image image = GenImageCellular(20, 20, 10);
     Texture2D texture = LoadTextureFromImage(image);
     SetMaterialTexture(model.materials, MATERIAL_MAP_ALBEDO, texture);
-    Vector3 position = {0.0f, 2.0f, 0.0f};
+    Vector3 position = {0.0f, 0.0f, 0.0f};
 
     World world = World();
     std::shared_ptr<Vehicle> entity = std::make_shared<Vehicle>(
         model, position, 1.0, 1.0,
         std::vector<Wheel>{{0.02, 0.0, 0.2, 0.0, {0.5, 1.0}},
-                           {0.02, 0.0, 0.2, 0.0, {-0.5, 1.0}},
                            {0.02, 0.0, 0.2, 0.0, {0.5, -1.0}},
+                           {0.02, 0.0, 0.2, 0.0, {-0.5, 1.0}},
                            {0.02, 0.0, 0.2, 0.0, {-0.5, -1.0}}});
     world.spawnEntity(std::dynamic_pointer_cast<Entity>(entity));
 

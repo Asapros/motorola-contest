@@ -64,7 +64,7 @@ void Vehicle::update(float delta_time) {
             Vector2{velocity.x, velocity.z},
             Vector2Scale(
                 Vector2Rotate(Vector2Normalize(wheel.position_relative),
-                              heading + PI / 2.0),
+                              heading + (PI / 2.0)),
                 angular_momentum * Vector2Length(wheel.position_relative) /
                     moment_of_intertia));
 
@@ -121,6 +121,11 @@ void Vehicle::update(float delta_time) {
                               1.0e-9) *
               wheel.radius)) +
             (vehicle_acc_required_to_stop * mass);
+        /*float friction_required_to_stop =*/
+        /*    (wheel_ang_acc_required_to_stop * wheel.moment_of_intertia /*/
+        /*     (std::max<float>(cos_wheel_heading_friction_force, 1.0e-9) **/
+        /*      wheel.radius)) +*/
+        /*    (vehicle_acc_required_to_stop * mass);*/
         /*float friction_required_to_stop = vehicle_acc_required_to_stop *
          * mass;*/
         /*float friction_required_to_stop =*/
@@ -160,6 +165,6 @@ void Vehicle::update(float delta_time) {
 }
 
 void Vehicle::draw() {
-    DrawModelEx(model, position, Vector3{0.0, 1.0, 0.0}, heading * 180.0 / PI,
+    DrawModelEx(model, position, Vector3{0.0, -1.0, 0.0}, heading * 180.0 / PI,
                 Vector3{1.0, 1.0, 1.0}, WHITE);
 }
