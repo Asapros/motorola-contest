@@ -4,6 +4,7 @@
 #include <string>
 
 #include "world.hpp"
+#include "model_manager.hpp"
 
 enum class GameState {
     MainMenu,
@@ -12,7 +13,9 @@ enum class GameState {
 
 class Game {
    private:
+    ModelManager modelManager;
     void loadLevel(std::string level);
+    Camera camera;
 
    public:
     std::optional<World> world;

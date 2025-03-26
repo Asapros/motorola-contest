@@ -5,6 +5,16 @@
 #include "game.hpp"
 #include "vehicle.hpp"
 #include "world.hpp"
+#include <iostream>
+
+Game::Game() : modelManager(ModelManager()), state(GameState::MainMenu) {
+    this->camera = {{30.0f, 30.0f, 30.0f},
+                     {0.0f, 0.0f, 0.0f},
+                     {0.0f, 1.0f, 0.0f},
+                     60.0f,
+                     CAMERA_ORTHOGRAPHIC};
+    
+}
 
 void Game::update(float delta_time) {
     if (state == GameState::MainMenu) {
@@ -13,14 +23,15 @@ void Game::update(float delta_time) {
         }
     } else if (state == GameState::InGame) {
         if (!world.has_value()) {
-            world = World();
+            this->loadLevel("test");
         }
 
-        if (IsKeyPressed(KEY_P)) {
-            paused = !paused;
+        if (IsKeyPressed(KEY_SPACE)) {
+            state = GameState::MainMenu;
         }
 
-        if (!paused) {
+
+        if (state == GameState::InGame) {
             world->update(delta_time);
         };
     }
@@ -28,24 +39,33 @@ void Game::update(float delta_time) {
 
 void Game::draw() {
     if (state == GameState::MainMenu) {
-        DrawText("Main menu", 20, 20, 24, WHITE);
+        DrawText("Main menu", 0, 0, 20, RED);
         DrawText("Press space to play", 20, 60, 16, WHITE);
-    } else if (state == GameState::InGame) {
-        if (world.has_value()) {
-            world->draw();
-        }
+        return;
+    }
+    if (state == GameState::InGame) {
+        if (!world.has_value()) return;
+
+        BeginMode3D(camera);
+        DrawGrid(25, 2.0);
+        world->draw();
+        EndMode3D();
     }
 }
 
 void Game::loadLevel(std::string level) {
-    // if (level == "test") {
-    //     std::shared_ptr<Vehicle> entity = std::make_shared<Vehicle>(
-    //         model, position, 10.0, 10.0,
-    //         std::vector<Wheel>{{1.0, 0.0, 0.2, 0.0, {0.5, 1.0}},
-    //                            {1.0, 0.0, 0.2, 0.0, {0.5, -1.0}},
-    //                            {1.0, 0.0, 0.2, 0.0, {-0.5, 1.0}},
-    //                            {1.0, 0.0, 0.2, 0.0, {-0.5, -1.0}}},
-    //         std::move(vehicle_controller));
-    //     world.spawnEntity(std::dynamic_pointer_cast<Entity>(entity));
-    // }
+    std::cerr << "loading " << level << std::endl;
+    World world = World();
+    std::unique_ptr<Controller> vehicle_controller =
+        std::make_unique<PlayerController>();
+    Vector3 position = {0.0, 0.0, 0.0};
+    std::shared_ptr<Vehicle> entity = std::make_shared<Vehicle>(
+        this->modelManager.getModel("assets/car_prototype.glb"), position, 10.0, 10.0,
+        std::vector<Wheel>{{1.0, 0.0, 0.2, 0.0, {0.5, 1.0}},
+                           {1.0, 0.0, 0.2, 0.0, {0.5, -1.0}},
+                           {1.0, 0.0, 0.2, 0.0, {-0.5, 1.0}},
+                           {1.0, 0.0, 0.2, 0.0, {-0.5, -1.0}}},
+        std::move(vehicle_controller));
+    world.spawnEntity(std::dynamic_pointer_cast<Entity>(entity));
+    this->world = world;
 }
