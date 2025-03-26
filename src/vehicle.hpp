@@ -1,7 +1,9 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
+#include "controller.hpp"
 #include "entity.hpp"
 #include "rigidbody.hpp"
 
@@ -21,11 +23,13 @@ class Vehicle : public Rigidbody {
 
    public:
     std::vector<Wheel> wheels;
+    std::unique_ptr<Controller> controller;
     void update(float delta_time);
     void draw();
     Vehicle(Model& model,
             Vector3 position,
             float mass,
             float moment_of_intertia,
-            std::vector<Wheel> wheels);
+            std::vector<Wheel> wheels,
+            std::unique_ptr<Controller> controller);
 };

@@ -1,7 +1,9 @@
+#include <algorithm>
 #include <cmath>
 #include <memory>
 #include <vector>
 
+#include "controller.hpp"
 #include "raylib.h"
 
 #include "entity.hpp"
@@ -29,12 +31,15 @@ int main() {
     Vector3 position = {0.0f, 0.0f, 0.0f};
 
     World world = World();
+    std::unique_ptr<Controller> vehicle_controller =
+        std::make_unique<PlayerController>();
     std::shared_ptr<Vehicle> entity = std::make_shared<Vehicle>(
         model, position, 10.0, 10.0,
         std::vector<Wheel>{{1.0, 0.0, 0.2, 0.0, {0.5, 1.0}},
                            {1.0, 0.0, 0.2, 0.0, {0.5, -1.0}},
                            {1.0, 0.0, 0.2, 0.0, {-0.5, 1.0}},
-                           {1.0, 0.0, 0.2, 0.0, {-0.5, -1.0}}});
+                           {1.0, 0.0, 0.2, 0.0, {-0.5, -1.0}}},
+        std::move(vehicle_controller));
     world.spawnEntity(std::dynamic_pointer_cast<Entity>(entity));
 
     while (!WindowShouldClose()) {
@@ -43,7 +48,7 @@ int main() {
         /*if (IsKeyDown(KEY_A)) {*/
         /*    entity->applyForce({0.0, 0.005, 0.0}, delta_time);*/
         /*}*/
-        for (uint32_t i = 0; i < entity->wheels.size(); i++) {
+        /*for (uint32_t i = 0; i < entity->wheels.size(); i++) {
             auto& wheel = entity->wheels[i];
             const float engine_torque = 2.0;
             if (IsKeyDown(KEY_W)) {
@@ -69,7 +74,7 @@ int main() {
                     wheel.steering -= steering_rate * delta_time;
                 }
             }
-        }
+        }*/
 
         world.update(delta_time);
 

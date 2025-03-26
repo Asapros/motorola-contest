@@ -1,5 +1,6 @@
 #include <cmath>
 #include <iostream>
+#include <memory>
 
 #include <raylib.h>
 #include <raymath.h>
@@ -20,14 +21,36 @@ Vehicle::Vehicle(Model& model,
                  Vector3 position,
                  float mass,
                  float moment_of_intertia,
-                 std::vector<Wheel> wheels)
+                 std::vector<Wheel> wheels,
+                 std::unique_ptr<Controller> controller)
     : Rigidbody(model, position, mass),
       angular_momentum(0.0),
       moment_of_intertia(moment_of_intertia),
-      wheels(wheels) {}
+      wheels(wheels),
+      controller(std::move(controller)) {}
 
 void Vehicle::update(float delta_time) {
     Rigidbody::update(delta_time);
+
+    Controls controls = controller->computeControls();
+
+    // TODO: don't hardcode it here; make it possible to drive only subset of
+    // wheels (i.e. front ones only)
+    const float engine_torque = 2.0;
+    const float steering_rate = 1.2;
+    const float max_steering = 0.8;
+    for (uint32_t i = 0; i < wheels.size(); i++) {
+        wheels[i].angular_velocity += controls.accelerator * engine_torque *
+                                      delta_time / wheels[i].moment_of_intertia;
+        if (i < 2) {
+            float target_steering = max_steering * controls.steering;
+            if (target_steering > wheels[i].steering) {
+                wheels[i].steering += steering_rate * delta_time;
+            } else {
+                wheels[i].steering -= steering_rate * delta_time;
+            }
+        }
+    }
 
     // Angular momentum drag
     angular_momentum *= std::pow(0.85, delta_time);
