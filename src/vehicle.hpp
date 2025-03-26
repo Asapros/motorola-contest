@@ -26,7 +26,7 @@ class Vehicle : public Rigidbody {
     std::unique_ptr<Controller> controller;
     void update(float delta_time);
     void draw();
-    Vehicle(Model& model,
+    Vehicle(std::shared_ptr<ModelWrapper> model,
             Vector3 position,
             float mass,
             float moment_of_intertia,

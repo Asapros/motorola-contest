@@ -10,7 +10,7 @@ class ModelWrapper {
    public:
     Model model;
 
-    ModelWrapper(Model model);
+    ModelWrapper(std::string model_path);
     ~ModelWrapper();
 };
 

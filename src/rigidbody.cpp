@@ -2,7 +2,7 @@
 #include "raylib.h"
 #include "raymath.h"
 
-Rigidbody::Rigidbody(Model& model, Vector3 position, float mass)
+Rigidbody::Rigidbody(std::shared_ptr<ModelWrapper> model, Vector3 position, float mass)
     : Entity(model, position), momentum({0, 0, 0}), mass(mass) {};
 
 void Rigidbody::update(float delta_time) {

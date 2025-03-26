@@ -5,6 +5,7 @@
 #include "raylib.h"
 
 #include "common.hpp"
+#include "model_manager.hpp"
 
 class World;
 
@@ -13,10 +14,10 @@ class Entity {
    public:
     World* world;
     EntityId eid;
-    Model& model;
+    std::shared_ptr<ModelWrapper> model;
     Vector3 position;
 
-    Entity(Model& model, Vector3 position);
+    Entity(std::shared_ptr<ModelWrapper> model, Vector3 position);
 
     virtual void update(float delta_time);
     virtual void draw();

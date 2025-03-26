@@ -9,7 +9,7 @@ class Rigidbody : public Entity {
    public:
     float mass;
 
-    Rigidbody(Model& model, Vector3 position, float mass);
+    Rigidbody(std::shared_ptr<ModelWrapper> model, Vector3 position, float mass);
 
     void update(float delta_time);
     void applyForce(Vector3 force, float time);

@@ -2,6 +2,7 @@
 #include <cmath>
 #include <memory>
 #include <vector>
+#include <iostream>
 
 #include "controller.hpp"
 #include "raylib.h"
@@ -10,6 +11,7 @@
 #include "rigidbody.hpp"
 #include "vehicle.hpp"
 #include "world.hpp"
+#include "model_manager.hpp"
 
 int main() {
     const int screenWidth = 640;
@@ -23,11 +25,13 @@ int main() {
                      {0.0f, 1.0f, 0.0f},
                      60.0f,
                      CAMERA_ORTHOGRAPHIC};
-    Model model = LoadModel("assets/car_prototype.glb");
+    
+    ModelManager modelManager = ModelManager();
+    std::shared_ptr<ModelWrapper> model = modelManager.getModel("assets/car_prototype.glb");
 
     Image image = GenImageCellular(20, 20, 10);
     Texture2D texture = LoadTextureFromImage(image);
-    SetMaterialTexture(model.materials, MATERIAL_MAP_ALBEDO, texture);
+    SetMaterialTexture(model->model.materials, MATERIAL_MAP_ALBEDO, texture);
     Vector3 position = {0.0f, 0.0f, 0.0f};
 
     World world = World();
@@ -90,6 +94,5 @@ int main() {
         EndDrawing();
     }
 
-    UnloadModel(model);
     CloseWindow();
 }

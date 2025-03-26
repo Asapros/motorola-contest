@@ -17,7 +17,7 @@ float PortedVector2CrossProduct(Vector2 v1, Vector2 v2) {
     return result;
 }
 
-Vehicle::Vehicle(Model& model,
+Vehicle::Vehicle(std::shared_ptr<ModelWrapper> model,
                  Vector3 position,
                  float mass,
                  float moment_of_intertia,
@@ -188,6 +188,6 @@ void Vehicle::update(float delta_time) {
 }
 
 void Vehicle::draw() {
-    DrawModelEx(model, position, Vector3{0.0, -1.0, 0.0}, heading * 180.0 / PI,
+    DrawModelEx(model->model, position, Vector3{0.0, -1.0, 0.0}, heading * 180.0 / PI,
                 Vector3{1.0, 1.0, 1.0}, WHITE);
 }

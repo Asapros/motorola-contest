@@ -38,14 +38,14 @@ void Game::draw() {
 }
 
 void Game::loadLevel(std::string level) {
-    if (level == "test") {
-        std::shared_ptr<Vehicle> entity = std::make_shared<Vehicle>(
-            model, position, 10.0, 10.0,
-            std::vector<Wheel>{{1.0, 0.0, 0.2, 0.0, {0.5, 1.0}},
-                               {1.0, 0.0, 0.2, 0.0, {0.5, -1.0}},
-                               {1.0, 0.0, 0.2, 0.0, {-0.5, 1.0}},
-                               {1.0, 0.0, 0.2, 0.0, {-0.5, -1.0}}},
-            std::move(vehicle_controller));
-        world.spawnEntity(std::dynamic_pointer_cast<Entity>(entity));
-    }
+    // if (level == "test") {
+    //     std::shared_ptr<Vehicle> entity = std::make_shared<Vehicle>(
+    //         model, position, 10.0, 10.0,
+    //         std::vector<Wheel>{{1.0, 0.0, 0.2, 0.0, {0.5, 1.0}},
+    //                            {1.0, 0.0, 0.2, 0.0, {0.5, -1.0}},
+    //                            {1.0, 0.0, 0.2, 0.0, {-0.5, 1.0}},
+    //                            {1.0, 0.0, 0.2, 0.0, {-0.5, -1.0}}},
+    //         std::move(vehicle_controller));
+    //     world.spawnEntity(std::dynamic_pointer_cast<Entity>(entity));
+    // }
 }
