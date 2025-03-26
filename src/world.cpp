@@ -12,6 +12,7 @@ void World::update(float delta_time) {
 }
 
 void World::draw() {
+    DrawGrid(25, 2.0);
     for (auto& [entityId, entity] : entities) {
         entity->draw();
     }

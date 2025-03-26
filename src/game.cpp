@@ -8,7 +8,7 @@
 #include "debug.hpp"
 #include <format>
 
-Game::Game() : modelManager(ModelManager()), state(GameState::MainMenu) {
+Game::Game() : modelManager(ModelManager()), state(GameState::MainMenu), showDebug(false) {
     this->camera = {{30.0f, 30.0f, 30.0f},
                      {0.0f, 0.0f, 0.0f},
                      {0.0f, 1.0f, 0.0f},
@@ -39,7 +39,7 @@ void Game::update(float delta_time) {
 
 void Game::draw() {
     if (state == GameState::MainMenu) {
-        DrawText("Main menu", 0, 0, 20, RED);
+        DrawText("Main menu", 0, 0, 20, WHITE);
         DrawText("Press space to play", 20, 60, 16, WHITE);
         return;
     }
@@ -47,9 +47,18 @@ void Game::draw() {
         if (!world.has_value()) return;
 
         BeginMode3D(camera);
-        DrawGrid(25, 2.0);
         world->draw();
         EndMode3D();
+        
+        if (IsKeyPressed(KEY_F3)) { this->showDebug = !this->showDebug; } // TODO move to dedicated function
+
+        if (!this->showDebug) return;
+        const int debugValuesSize = 15;
+        int offset = 0;
+        for (const auto &pair : debugValues) {
+            DrawText(std::format("{}: {}", pair.first, pair.second).c_str(), 0, offset * debugValuesSize, debugValuesSize, VIOLET);
+            offset++;
+        }
     }
 }
 

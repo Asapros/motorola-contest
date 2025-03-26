@@ -16,6 +16,7 @@ class Game {
     ModelManager modelManager;
     void loadLevel(std::string level);
     Camera camera;
+    bool showDebug;
 
    public:
     std::optional<World> world;

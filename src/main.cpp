@@ -15,9 +15,10 @@
 #include "game.hpp"
 #include "debug.hpp"
 
+const int screenWidth = 640;
+const int screenHeight = 480;
+
 int main() {
-    const int screenWidth = 640;
-    const int screenHeight = 480;
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetTargetFPS(60);
     InitWindow(screenWidth, screenHeight, "kubica");

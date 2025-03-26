@@ -8,6 +8,7 @@
 #include "common.hpp"
 #include "rigidbody.hpp"
 #include "vehicle.hpp"
+#include "debug.hpp"
 
 // Backported from https://github.com/raysan5/raylib/pull/4520 - there was no
 // stable release since that pull request
@@ -54,11 +55,11 @@ void Vehicle::update(float delta_time) {
 
     // Angular momentum drag
     angular_momentum *= std::pow(0.85, delta_time);
-    std::cerr << "angular_momentum = " << angular_momentum << '\n';
+    debugValues["phys_ang_mom"] = std::to_string(angular_momentum);
 
     heading += angular_momentum / moment_of_intertia;
     heading = fmod(heading, 2 * PI);
-    std::cerr << "heading = " << heading << '\n';
+    debugValues["phys_direction"] = std::to_string(heading);
 
     Vector3 velocity = computeVelocity();
 
@@ -71,8 +72,8 @@ void Vehicle::update(float delta_time) {
         // Drag
         wheel.angular_velocity *= std::pow(0.95, delta_time);
 
-        std::cerr << "angular_velocity = " << wheel.angular_velocity << '\n';
-        std::cerr << "steering = " << wheel.steering << '\n';
+        // std::cerr << "angular_velocity = " << wheel.angular_velocity << '\n';
+        // std::cerr << "steering = " << wheel.steering << '\n';
 
         // Velocity of the bottom point on the wheel
         float bottom_velocity_rel = wheel.angular_velocity * wheel.radius;
@@ -95,7 +96,7 @@ void Vehicle::update(float delta_time) {
             Vector2Subtract(velocity_with_rot, bottom_velocity_rel_vec);
         float delta_velocity_len = Vector2Length(delta_velocity);
 
-        std::cerr << "delta_velocity_len = " << delta_velocity_len << '\n';
+        // std::cerr << "delta_velocity_len = " << delta_velocity_len << '\n';
 
         // TODO: determine from tire and ground material
         float static_friction_coef = 0.8;
@@ -113,42 +114,42 @@ void Vehicle::update(float delta_time) {
 
         float cos_wheel_heading_friction_force =
             Vector2DotProduct(wheel_heading_vec, friction_dir);
-        std::cerr << "cos_wheel_heading_friction_force = "
-                  << cos_wheel_heading_friction_force << '\n';
+        // std::cerr << "cos_wheel_heading_friction_force = "
+        //           << cos_wheel_heading_friction_force << '\n';
         float cos_wheel_pos_friction_force = Vector2DotProduct(
             Vector2Normalize(wheel_position_rotated), friction_dir);
-        std::cerr << "cos_wheel_pos_friction_force = "
-                  << cos_wheel_pos_friction_force << '\n';
+        // std::cerr << "cos_wheel_pos_friction_force = "
+        //           << cos_wheel_pos_friction_force << '\n';
         float sin_wheel_pos_friction_force = PortedVector2CrossProduct(
             Vector2Normalize(wheel_position_rotated), friction_dir);
-        std::cerr << "sin_wheel_pos_friction_force = "
-                  << sin_wheel_pos_friction_force << '\n';
+        // std::cerr << "sin_wheel_pos_friction_force = "
+        //           << sin_wheel_pos_friction_force << '\n';
 
         float wheel_ang_acc_required_to_stop =
             delta_velocity_len / (wheel.radius * delta_time);
-        std::cerr << "wheel_ang_acc_required_to_stop = "
-                  << wheel_ang_acc_required_to_stop << '\n';
+        // std::cerr << "wheel_ang_acc_required_to_stop = "
+        //           << wheel_ang_acc_required_to_stop << '\n';
         float vehicle_acc_required_to_stop = delta_velocity_len / delta_time;
-        std::cerr << "vehicle_acc_required_to_stop = "
-                  << vehicle_acc_required_to_stop << '\n';
+        // std::cerr << "vehicle_acc_required_to_stop = "
+        //           << vehicle_acc_required_to_stop << '\n';
         float friction_required_to_stop =
             (wheel_ang_acc_required_to_stop * wheel.moment_of_intertia /
              (std::max<float>(std::abs(cos_wheel_heading_friction_force),
                               1.0e-9) *
               wheel.radius)) +
             (vehicle_acc_required_to_stop * mass);
-        std::cerr << "friction_required_to_stop = " << friction_required_to_stop
-                  << '\n';
+        // std::cerr << "friction_required_to_stop = " << friction_required_to_stop
+        //           << '\n';
 
         float actual_friction;
         if (friction_required_to_stop <= max_static_friction) {
             actual_friction = friction_required_to_stop;
-            std::cerr << "static_friction\n";
+            // std::cerr << "static_friction\n";
         } else {
             actual_friction = kinetic_friction;
-            std::cerr << "kinetic_friction\n";
+            // std::cerr << "kinetic_friction\n";
         }
-        std::cerr << "actual_friction = " << actual_friction << '\n';
+        // std::cerr << "actual_friction = " << actual_friction << '\n';
 
         // Apply forces and torques
         wheel.angular_velocity +=
@@ -163,9 +164,7 @@ void Vehicle::update(float delta_time) {
     applyForce(Vector3{force.x, 0.0, force.y}, delta_time);
     angular_momentum += torque * delta_time;
 
-    std::cerr << "velocity_len = " << Vector3Length(computeVelocity()) << '\n';
-
-    std::cerr << '\n';
+    debugValues["phys_velocity"] = std::to_string(Vector3Length(computeVelocity()));
 }
 
 void Vehicle::draw() {
