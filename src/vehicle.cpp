@@ -131,31 +131,12 @@ void Vehicle::update(float delta_time) {
         float vehicle_acc_required_to_stop = delta_velocity_len / delta_time;
         std::cerr << "vehicle_acc_required_to_stop = "
                   << vehicle_acc_required_to_stop << '\n';
-        /*float friction_required_to_stop =*/
-        /*    (wheel_ang_acc_required_to_stop * wheel.moment_of_intertia /*/
-        /*     (std::max<float>(std::abs(cos_wheel_heading_friction_force),*/
-        /*                      1.0e-9) **/
-        /*      wheel.radius)) +*/
-        /*    (vehicle_acc_required_to_stop * mass /*/
-        /*     std::max<float>(std::abs(cos_wheel_pos_friction_force), 1.0e-9));*/
         float friction_required_to_stop =
             (wheel_ang_acc_required_to_stop * wheel.moment_of_intertia /
              (std::max<float>(std::abs(cos_wheel_heading_friction_force),
                               1.0e-9) *
               wheel.radius)) +
             (vehicle_acc_required_to_stop * mass);
-        /*float friction_required_to_stop =*/
-        /*    (wheel_ang_acc_required_to_stop * wheel.moment_of_intertia /*/
-        /*     (std::max<float>(cos_wheel_heading_friction_force, 1.0e-9) **/
-        /*      wheel.radius)) +*/
-        /*    (vehicle_acc_required_to_stop * mass);*/
-        /*float friction_required_to_stop = vehicle_acc_required_to_stop *
-         * mass;*/
-        /*float friction_required_to_stop =*/
-        /*    (wheel_ang_acc_required_to_stop * wheel.moment_of_intertia /*/
-        /*     (wheel.radius)) +*/
-        /*    (vehicle_acc_required_to_stop * mass);*/
-        /*friction_required_to_stop = 0.05;*/
         std::cerr << "friction_required_to_stop = " << friction_required_to_stop
                   << '\n';
 

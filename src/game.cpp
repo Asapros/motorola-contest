@@ -5,7 +5,8 @@
 #include "game.hpp"
 #include "vehicle.hpp"
 #include "world.hpp"
-#include <iostream>
+#include "debug.hpp"
+#include <format>
 
 Game::Game() : modelManager(ModelManager()), state(GameState::MainMenu) {
     this->camera = {{30.0f, 30.0f, 30.0f},
@@ -30,7 +31,6 @@ void Game::update(float delta_time) {
             state = GameState::MainMenu;
         }
 
-
         if (state == GameState::InGame) {
             world->update(delta_time);
         };
@@ -54,7 +54,7 @@ void Game::draw() {
 }
 
 void Game::loadLevel(std::string level) {
-    std::cerr << "loading " << level << std::endl;
+    debugLog("MENU", std::format("loading level '{}'", level));
     World world = World();
     std::unique_ptr<Controller> vehicle_controller =
         std::make_unique<PlayerController>();

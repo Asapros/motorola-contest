@@ -1,13 +1,14 @@
 #include "model_manager.hpp"
 #include "raylib.h"
 #include <memory>
-#include <iostream>
+#include "debug.hpp"
+#include <format>
+
 
 ModelWrapper::ModelWrapper(std::string model_path) {
     this->model = LoadModel(model_path.c_str());
 }
 ModelWrapper::~ModelWrapper() {
-    std::cerr << "unloading" << std::endl;
     UnloadModel(this->model);
 }
 

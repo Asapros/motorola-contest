@@ -13,6 +13,7 @@
 #include "world.hpp"
 #include "model_manager.hpp"
 #include "game.hpp"
+#include "debug.hpp"
 
 int main() {
     const int screenWidth = 640;
