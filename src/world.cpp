@@ -24,8 +24,9 @@ EntityId World::newEntityId() {
     return id;
 }
 
-void World::spawnEntity(std::shared_ptr<Entity> entity) {
+EntityId World::spawnEntity(std::shared_ptr<Entity> entity) {
     entity->eid = newEntityId();
     entity->world = this;
     this->entities.emplace(entity->eid, entity);
+    return entity->eid;
 }
