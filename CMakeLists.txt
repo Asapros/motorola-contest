@@ -23,6 +23,12 @@ add_executable(motorola_contest ${project_sources})
 target_link_libraries(motorola_contest PRIVATE raylib)
 target_include_directories(motorola_contest PRIVATE "${raylib_SOURCE_DIR}/src")
 
+if(MSVC)
+	target_compile_options(motorola_contest PRIVATE /W4)
+else()
+	target_compile_options(motorola_contest PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
 # target_compile_definitions(motorola_contest PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
 
 # Tests
@@ -37,6 +43,11 @@ target_include_directories(all-tests PRIVATE "src" "${raylib_SOURCE_DIR}/src")
 add_test(NAME all-tests COMMAND all-tests)
 enable_testing()
 
+if(MSVC)
+	target_compile_options(all-tests PRIVATE /W4)
+else()
+	target_compile_options(all-tests PRIVATE -Wall -Wextra -Wpedantic)
+endif()
 
 # file(COPY assets DESTINATION "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}")
 add_custom_target(copy_assets

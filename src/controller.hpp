@@ -11,6 +11,7 @@ struct Controls {
 
 class Controller {
    public:
+    virtual ~Controller();
     virtual Controls computeControls() = 0;
 };
 

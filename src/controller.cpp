@@ -1,6 +1,8 @@
 #include "controller.hpp"
 #include <raylib.h>
 
+Controller::~Controller() {}
+
 PlayerController::PlayerController()
     : key_forward(KEY_W),
       key_backward(KEY_S),
