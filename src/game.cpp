@@ -1,20 +1,22 @@
+#include <format>
 #include <string>
 
 #include <raylib.h>
 
+#include "debug.hpp"
 #include "game.hpp"
 #include "vehicle.hpp"
 #include "world.hpp"
-#include "debug.hpp"
-#include <format>
 
-Game::Game() : modelManager(ModelManager()), state(GameState::MainMenu), showDebug(false) {
+Game::Game()
+    : modelManager(ModelManager()),
+      showDebug(false),
+      state(GameState::MainMenu) {
     this->camera = {{30.0f, 30.0f, 30.0f},
-                     {0.0f, 0.0f, 0.0f},
-                     {0.0f, 1.0f, 0.0f},
-                     60.0f,
-                     CAMERA_ORTHOGRAPHIC};
-    
+                    {0.0f, 0.0f, 0.0f},
+                    {0.0f, 1.0f, 0.0f},
+                    60.0f,
+                    CAMERA_ORTHOGRAPHIC};
 }
 
 void Game::update(float delta_time) {
@@ -44,19 +46,25 @@ void Game::draw() {
         return;
     }
     if (state == GameState::InGame) {
-        if (!world.has_value()) return;
+        if (!world.has_value())
+            return;
 
         BeginMode3D(camera);
         world->draw();
         EndMode3D();
-        
-        if (IsKeyPressed(KEY_F3)) { this->showDebug = !this->showDebug; } // TODO move to dedicated function
 
-        if (!this->showDebug) return;
+        // TODO move to dedicated function
+        if (IsKeyPressed(KEY_F3)) {
+            this->showDebug = !this->showDebug;
+        }
+
+        if (!this->showDebug)
+            return;
         const int debugValuesSize = 15;
         int offset = 0;
-        for (const auto &pair : debugValues) {
-            DrawText(std::format("{}: {}", pair.first, pair.second).c_str(), 0, offset * debugValuesSize, debugValuesSize, VIOLET);
+        for (const auto& pair : debugValues) {
+            DrawText(std::format("{}: {}", pair.first, pair.second).c_str(), 0,
+                     offset * debugValuesSize, debugValuesSize, VIOLET);
             offset++;
         }
     }
@@ -69,7 +77,8 @@ void Game::loadLevel(std::string level) {
         std::make_unique<PlayerController>();
     Vector3 position = {0.0, 0.0, 0.0};
     std::shared_ptr<Vehicle> entity = std::make_shared<Vehicle>(
-        this->modelManager.getModel("assets/car_prototype.glb"), position, 10.0, 10.0,
+        this->modelManager.getModel("assets/car_prototype.glb"), position, 10.0,
+        10.0,
         std::vector<Wheel>{{1.0, 0.0, 0.2, 0.0, {0.5, 1.0}},
                            {1.0, 0.0, 0.2, 0.0, {0.5, -1.0}},
                            {1.0, 0.0, 0.2, 0.0, {-0.5, 1.0}},
