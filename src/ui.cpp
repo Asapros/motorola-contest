@@ -59,6 +59,20 @@ void UiManager::drawUi([[maybe_unused]] World& world,
 void UiManager::drawSettings(GameState previousState) {
     changeGameState(GameState::InSettings);
     DrawText("RAYDER SETTINGS", 20, 20, 20, WHITE);
+
+    Rectangle fullscreenCheckbox = {(float)(menuWidth / 2 - 100),
+                                    (float)(menuHeight / 2 - gap), 80.0f,
+                                    80.0f};
+    Rectangle applyButton = {(float)(menuWidth / 2 - 100),
+                             (float)(menuHeight / 2 + gap), 200.0f, 80.0f};
+
+    if (GuiButton(applyButton, "APPLY") || IsKeyPressed(KEY_ESCAPE)) {
+        if (previousState == GameState::MainMenu || previousState == GameState::InPause) {
+            changeGameState(previousState);
+        } else {
+            changeGameState(GameState::InGame);
+        }
+    }
 }
 
 void UiManager::drawPauseMenu() {
@@ -70,7 +84,7 @@ void UiManager::drawPauseMenu() {
     Rectangle settingsButton = {(float)(menuWidth / 2 - 100),
                                 (float)(menuHeight / 2), 200.0f, 80.0f};
     Rectangle returnButton = {(float)(menuWidth / 2 - 100),
-                            (float)(menuHeight / 2 + gap), 200.0f, 80.0f};
+                              (float)(menuHeight / 2 + gap), 200.0f, 80.0f};
 
     if (GuiButton(playButton, "CONTINUE")) {
         changeGameState(GameState::InGame);

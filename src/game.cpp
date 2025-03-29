@@ -9,6 +9,8 @@
 #include "vehicle.hpp"
 #include "world.hpp"
 
+GameState previousState;
+
 Game::Game()
     : modelManager(ModelManager()),
       showDebug(false),
@@ -41,7 +43,6 @@ void Game::update(float delta_time) {
 }
 
 void Game::draw() {
-    GameState previousState;
     if(state != GameState::InGame && state != GameState::InSettings)
         previousState = state;
 
