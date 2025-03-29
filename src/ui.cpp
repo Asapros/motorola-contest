@@ -64,6 +64,25 @@ void UiManager::drawSettings(GameState previousState) {
 void UiManager::drawPauseMenu() {
     changeGameState(GameState::InPause);
     DrawText("RAYDER PAUSE", 20, 20, 20, WHITE);
+
+    Rectangle playButton = {(float)(menuWidth / 2 - 100),
+                            (float)(menuHeight / 2 - gap), 200.0f, 80.0f};
+    Rectangle settingsButton = {(float)(menuWidth / 2 - 100),
+                                (float)(menuHeight / 2), 200.0f, 80.0f};
+    Rectangle returnButton = {(float)(menuWidth / 2 - 100),
+                            (float)(menuHeight / 2 + gap), 200.0f, 80.0f};
+
+    if (GuiButton(playButton, "CONTINUE")) {
+        changeGameState(GameState::InGame);
+    }
+
+    if (GuiButton(settingsButton, "SETTINGS")) {
+        changeGameState(GameState::InSettings);
+    }
+
+    if (GuiButton(returnButton, "EXIT TO MENU")) {
+        changeGameState(GameState::MainMenu);
+    }
 }
 
 void UiManager::updateSizes() {
