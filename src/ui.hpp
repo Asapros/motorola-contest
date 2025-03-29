@@ -28,6 +28,7 @@ class UiManager {
     void drawPauseMenu();
     void drawSettings(GameState previousState);
     void updateSizes();
+    void drawMeter(float value, float multiplier, float second_value, Vector2 position, float radius, const char* unit, std::vector<int> values);
 
     UiManager();
 };

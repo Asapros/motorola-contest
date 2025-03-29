@@ -68,8 +68,11 @@ void Game::draw() {
             // world->draw();
             // EndMode3D();
         // }
-        // ui.drawUi(world.value(), playerId.value());
-        
+        ui.drawUi(world.value(), playerId.value());
+
+        ui.drawMeter(69.0f, 1, 3.0f, {GetScreenWidth() - 100, GetScreenHeight() - 100}, 80, NULL, { 0, 20, 40, 60, 80, 100, 120 });
+        ui.drawMeter(2137.0f, 1000, 0.0f, {GetScreenWidth() - 280, GetScreenHeight() - 100}, 80, "x1000", { 0, 1, 2, 3, 4, 5, 6 });
+
         // if (IsKeyPressed(KEY_F3)) { this->showDebug = !this->showDebug; } // TODO move to dedicated function
 
         // if (!this->showDebug) return;
