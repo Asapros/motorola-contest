@@ -6,9 +6,9 @@
 #include <raymath.h>
 
 #include "common.hpp"
+#include "debug.hpp"
 #include "rigidbody.hpp"
 #include "vehicle.hpp"
-#include "debug.hpp"
 
 // Backported from https://github.com/raysan5/raylib/pull/4520 - there was no
 // stable release since that pull request
@@ -116,8 +116,8 @@ void Vehicle::update(float delta_time) {
             Vector2DotProduct(wheel_heading_vec, friction_dir);
         // std::cerr << "cos_wheel_heading_friction_force = "
         //           << cos_wheel_heading_friction_force << '\n';
-        float cos_wheel_pos_friction_force = Vector2DotProduct(
-            Vector2Normalize(wheel_position_rotated), friction_dir);
+        // float cos_wheel_pos_friction_force = Vector2DotProduct(
+        //    Vector2Normalize(wheel_position_rotated), friction_dir);
         // std::cerr << "cos_wheel_pos_friction_force = "
         //           << cos_wheel_pos_friction_force << '\n';
         float sin_wheel_pos_friction_force = PortedVector2CrossProduct(
@@ -138,7 +138,8 @@ void Vehicle::update(float delta_time) {
                               1.0e-9) *
               wheel.radius)) +
             (vehicle_acc_required_to_stop * mass);
-        // std::cerr << "friction_required_to_stop = " << friction_required_to_stop
+        // std::cerr << "friction_required_to_stop = " <<
+        // friction_required_to_stop
         //           << '\n';
 
         float actual_friction;
@@ -164,10 +165,11 @@ void Vehicle::update(float delta_time) {
     applyForce(Vector3{force.x, 0.0, force.y}, delta_time);
     angular_momentum += torque * delta_time;
 
-    debugValues["phys_velocity"] = std::to_string(Vector3Length(computeVelocity()));
+    debugValues["phys_velocity"] =
+        std::to_string(Vector3Length(computeVelocity()));
 }
 
 void Vehicle::draw() {
-    DrawModelEx(model->model, position, Vector3{0.0, -1.0, 0.0}, heading * 180.0 / PI,
-                Vector3{1.0, 1.0, 1.0}, WHITE);
+    DrawModelEx(model->model, position, Vector3{0.0, -1.0, 0.0},
+                heading * 180.0 / PI, Vector3{1.0, 1.0, 1.0}, WHITE);
 }

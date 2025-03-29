@@ -4,9 +4,11 @@
 #include "world.hpp"
 
 Entity::Entity(std::shared_ptr<ModelWrapper> model, Vector3 position)
-: model(model), world(nullptr), eid(0), position(position) {};
+    : world(nullptr), eid(0), model(model), position(position) {}
 
-void Entity::update(float delta_time) {}
+Entity::~Entity() {}
+
+void Entity::update([[maybe_unused]] float delta_time) {}
 
 void Entity::draw() {
     DrawModel(model->model, position, 1.0f, WHITE);
