@@ -3,15 +3,21 @@
 #include "entity.hpp"
 
 class Rigidbody : public Entity {
-   private:
+   protected:
     Vector3 momentum;
+    float mass;
+    float angular_momentum;
+    float moment_of_intertia;
 
    public:
-    float mass;
-
-    Rigidbody(std::shared_ptr<ModelWrapper> model, Vector3 position, float mass);
+    Rigidbody(std::shared_ptr<ModelWrapper> model,
+              Vector3 position,
+              float heading,
+              float mass,
+              float moment_of_intertia);
 
     void update(float delta_time);
     void applyForce(Vector3 force, float time);
+    void applyTorque(float torque, float time);
     Vector3 computeVelocity();
 };

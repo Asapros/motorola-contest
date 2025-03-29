@@ -20,13 +20,12 @@ float PortedVector2CrossProduct(Vector2 v1, Vector2 v2) {
 
 Vehicle::Vehicle(std::shared_ptr<ModelWrapper> model,
                  Vector3 position,
+                 float heading,
                  float mass,
                  float moment_of_intertia,
                  std::vector<Wheel> wheels,
                  std::unique_ptr<Controller> controller)
-    : Rigidbody(model, position, mass),
-      angular_momentum(0.0),
-      moment_of_intertia(moment_of_intertia),
+    : Rigidbody(model, position, heading, mass, moment_of_intertia),
       wheels(wheels),
       controller(std::move(controller)) {}
 
@@ -57,8 +56,6 @@ void Vehicle::update(float delta_time) {
     angular_momentum *= std::pow(0.85, delta_time);
     debugValues["phys_ang_mom"] = std::to_string(angular_momentum);
 
-    heading += angular_momentum / moment_of_intertia;
-    heading = fmod(heading, 2 * PI);
     debugValues["phys_direction"] = std::to_string(heading);
 
     Vector3 velocity = computeVelocity();
@@ -163,13 +160,8 @@ void Vehicle::update(float delta_time) {
     }
 
     applyForce(Vector3{force.x, 0.0, force.y}, delta_time);
-    angular_momentum += torque * delta_time;
+    applyTorque(torque, delta_time);
 
     debugValues["phys_velocity"] =
         std::to_string(Vector3Length(computeVelocity()));
-}
-
-void Vehicle::draw() {
-    DrawModelEx(model->model, position, Vector3{0.0, -1.0, 0.0},
-                heading * 180.0 / PI, Vector3{1.0, 1.0, 1.0}, WHITE);
 }
