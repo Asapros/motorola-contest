@@ -1,8 +1,12 @@
 #pragma once
 
-#include "entity.hpp"
+#include <vector>
 
-class Rigidbody : public Entity {
+#include "raylib.h"
+
+#include "collidable.hpp"
+
+class Rigidbody : public Collidable {
    protected:
     Vector3 momentum;
     float mass;
@@ -13,6 +17,7 @@ class Rigidbody : public Entity {
     Rigidbody(std::shared_ptr<ModelWrapper> model,
               Vector3 position,
               float heading,
+              std::vector<Vector2> collider_vertices,
               float mass,
               float moment_of_intertia);
 

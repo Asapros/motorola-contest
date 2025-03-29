@@ -24,6 +24,7 @@ class Vehicle : public Rigidbody {
     Vehicle(std::shared_ptr<ModelWrapper> model,
             Vector3 position,
             float heading,
+            std::vector<Vector2> collider_vertices,
             float mass,
             float moment_of_intertia,
             std::vector<Wheel> wheels,

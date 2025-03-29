@@ -21,11 +21,17 @@ float PortedVector2CrossProduct(Vector2 v1, Vector2 v2) {
 Vehicle::Vehicle(std::shared_ptr<ModelWrapper> model,
                  Vector3 position,
                  float heading,
+                 std::vector<Vector2> collider_vertices,
                  float mass,
                  float moment_of_intertia,
                  std::vector<Wheel> wheels,
                  std::unique_ptr<Controller> controller)
-    : Rigidbody(model, position, heading, mass, moment_of_intertia),
+    : Rigidbody(model,
+                position,
+                heading,
+                collider_vertices,
+                mass,
+                moment_of_intertia),
       wheels(wheels),
       controller(std::move(controller)) {}
 

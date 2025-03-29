@@ -1,5 +1,6 @@
 #include <format>
 #include <string>
+#include <vector>
 
 #include <raylib.h>
 
@@ -81,7 +82,7 @@ void Game::loadLevel(std::string level) {
     Vector3 position = {0.0, 0.0, 0.0};
     std::shared_ptr<Vehicle> entity = std::make_shared<Vehicle>(
         this->modelManager.getModel("assets/car_prototype.glb"), position, 0.0,
-        10.0, 10.0,
+        std::vector<Vector2>(), 10.0, 10.0,
         std::vector<Wheel>{{1.0, 0.0, 0.2, 0.0, {0.5, 1.0}},
                            {1.0, 0.0, 0.2, 0.0, {0.5, -1.0}},
                            {1.0, 0.0, 0.2, 0.0, {-0.5, 1.0}},

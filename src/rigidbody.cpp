@@ -1,13 +1,15 @@
 #include "rigidbody.hpp"
+#include "collidable.hpp"
 #include "raylib.h"
 #include "raymath.h"
 
 Rigidbody::Rigidbody(std::shared_ptr<ModelWrapper> model,
                      Vector3 position,
                      float heading,
+                     std::vector<Vector2> collider_vertices,
                      float mass,
                      float moment_of_intertia)
-    : Entity(model, position, heading),
+    : Collidable(model, position, heading, collider_vertices),
       momentum({0, 0, 0}),
       mass(mass),
       angular_momentum(0.0f),
