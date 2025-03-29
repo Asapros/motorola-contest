@@ -8,6 +8,7 @@ UiManager::UiManager() {
     updateSizes();
     initStyles();
     changeGameState(GameState::MainMenu);
+    showExitMessage = false;
 }
 
 void UiManager::drawMenu() {
@@ -15,6 +16,39 @@ void UiManager::drawMenu() {
         changeGameState(GameState::InGame);
 
     DrawText("RAYDER", 20, 20, 20, WHITE);
+
+    Rectangle playButton = {(float)(menuWidth / 2 - 100),
+                            (float)(menuHeight / 2 - gap), 200.0f, 80.0f};
+    Rectangle settingsButton = {(float)(menuWidth / 2 - 100),
+                                (float)(menuHeight / 2), 200.0f, 80.0f};
+    Rectangle exitButton = {(float)(menuWidth / 2 - 100),
+                            (float)(menuHeight / 2 + gap), 200.0f, 80.0f};
+
+    if (GuiButton(playButton, "PLAY") && !showExitMessage) {
+        changeGameState(GameState::InGame);
+    }
+
+    if (GuiButton(settingsButton, "SETTINGS") && !showExitMessage) {
+        changeGameState(GameState::InSettings);
+    }
+
+    if (GuiButton(exitButton, "EXIT") && !showExitMessage) {
+        showExitMessage = true;
+    }
+
+    if (showExitMessage) {
+        DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), BLACK);
+        int result =
+            GuiMessageBox({(float)GetScreenWidth() / 2 - 275,
+                           (float)GetScreenHeight() / 2 - 125, 550, 250},
+                          GuiIconText(ICON_EXIT, "Close Window"),
+                          "Do you really want to exit?", "Yes;No");
+
+        if ((result == 0) || (result == 2))
+            showExitMessage = false;
+        else if (result == 1)
+            CloseWindow();
+    }
 }
 
 void UiManager::drawUi([[maybe_unused]] World& world,
