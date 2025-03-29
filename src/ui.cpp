@@ -7,16 +7,29 @@
 UiManager::UiManager() {
     updateSizes();
     initStyles();
+    changeGameState(GameState::MainMenu);
 }
 
 void UiManager::drawMenu() {
-    DrawText("Main menu", 0, 0, 20, WHITE);
-    DrawText("Press space to play", 20, 60, 16, WHITE);
+    if (IsKeyPressed(KEY_N))
+        changeGameState(GameState::InGame);
+
+    DrawText("RAYDER", 20, 20, 20, WHITE);
 }
 
 void UiManager::drawUi([[maybe_unused]] World& world,
                        [[maybe_unused]] EntityId playerId) {
     DrawText("ui", 0, 0, 20, RED);
+}
+
+void UiManager::drawSettings(GameState previousState) {
+    changeGameState(GameState::InSettings);
+    DrawText("RAYDER SETTINGS", 20, 20, 20, WHITE);
+}
+
+void UiManager::drawPauseMenu() {
+    changeGameState(GameState::InPause);
+    DrawText("RAYDER PAUSE", 20, 20, 20, WHITE);
 }
 
 void UiManager::updateSizes() {
@@ -41,4 +54,8 @@ void UiManager::initStyles() {
     GuiSetStyle(DEFAULT, BASE_COLOR_NORMAL, style.BASE_COLOR);
     GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, style.TEXT_COLOR);
     GuiSetStyle(DEFAULT, BACKGROUND_COLOR, style.BASE_COLOR);
+}
+
+void UiManager::changeGameState(GameState state) {
+    this->state = state;
 }

@@ -26,7 +26,7 @@ class UiManager {
     void drawMenu();
     void drawUi(World& world, EntityId player);
     void drawPauseMenu();
-    void drawSettings();
+    void drawSettings(GameState previousState);
     void updateSizes();
 
     UiManager();

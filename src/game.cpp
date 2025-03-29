@@ -22,56 +22,75 @@ Game::Game()
 }
 
 void Game::update(float delta_time) {
-    if (state == GameState::MainMenu) {
-        if (IsKeyPressed(KEY_SPACE)) {
-            state = GameState::InGame;
-        }
-    } else if (state == GameState::InGame) {
+    if (state == GameState::InGame) {
         if (!world.has_value()) {
             this->loadLevel("test");
         }
-
-        if (IsKeyPressed(KEY_SPACE)) {
-            state = GameState::MainMenu;
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            state = GameState::InPause;
         }
 
         if (state == GameState::InGame) {
             world->update(delta_time);
         };
+    } else if (state == GameState::InPause) {
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            state = GameState::InGame;
+        }
     }
 }
 
 void Game::draw() {
+    GameState previousState;
+    if(state != GameState::InGame && state != GameState::InSettings)
+        previousState = state;
+
     if (state == GameState::MainMenu) {
         ui.drawMenu();
+        state = ui.state;
         return;
     }
     if (state == GameState::InGame) {
-        if (!world.has_value())
-            return;
-        if (!playerId.has_value())
-            return;
-
-        BeginMode3D(camera);
-        world->draw();
-        EndMode3D();
-
-        ui.drawUi(world.value(), playerId.value());
-
-        // TODO move to dedicated function
-        // if (IsKeyPressed(KEY_F3)) {
-        //     this->showDebug = !this->showDebug;
+        if (!world.has_value()) return;
+        if (!playerId.has_value()) return;
+        
+        // THIS IS A VERY BIG TODO; DO NOT TOUCH THIS
+        // if (state == GameState::InPause) {
+        //      BeginShaderMode(blur_shader);
+                    BeginMode3D(camera);
+                    world->draw();
+                    EndMode3D();
+        //      EndShaderMode();
         // }
+        // else {
+            // BeginMode3D(camera);
+            // world->draw();
+            // EndMode3D();
+        // }
+        // ui.drawUi(world.value(), playerId.value());
+        
+        // if (IsKeyPressed(KEY_F3)) { this->showDebug = !this->showDebug; } // TODO move to dedicated function
 
         // if (!this->showDebug) return;
         // const int debugValuesSize = 15;
         // int offset = 0;
         // for (const auto &pair : debugValues) {
-        //     DrawText(std::format("{}: {}", pair.first, pair.second).c_str(),
-        //     0, offset * debugValuesSize, debugValuesSize, VIOLET); offset++;
+        //     DrawText(std::format("{}: {}", pair.first, pair.second).c_str(), 0, offset * debugValuesSize, debugValuesSize, VIOLET);
+        //     offset++;
         // }
     }
+    if (state == GameState::InPause) {
+        ui.drawPauseMenu();
+        state = ui.state;
+        return;
+    }
+    if (state == GameState::InSettings) {
+        ui.drawSettings(previousState);
+        state = ui.state;
+        return;
+    }
 }
+
 
 void Game::loadLevel(std::string level) {
     debugLog("MENU", std::format("loading level '{}'", level));
