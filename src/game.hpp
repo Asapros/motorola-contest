@@ -7,11 +7,6 @@
 #include "model_manager.hpp"
 #include "ui.hpp"
 
-enum class GameState {
-    MainMenu,
-    InGame,
-};
-
 class Game {
    private:
     ModelManager modelManager;
