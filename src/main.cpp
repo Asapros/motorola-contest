@@ -1,19 +1,19 @@
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 #include <memory>
 #include <vector>
-#include <iostream>
 
-#include "controller.hpp"
 #include "raylib.h"
 
+#include "controller.hpp"
+#include "debug.hpp"
 #include "entity.hpp"
+#include "game.hpp"
+#include "model_manager.hpp"
 #include "rigidbody.hpp"
 #include "vehicle.hpp"
 #include "world.hpp"
-#include "model_manager.hpp"
-#include "game.hpp"
-#include "debug.hpp"
 
 const int screenWidth = 640;
 const int screenHeight = 480;

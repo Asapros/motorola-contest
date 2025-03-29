@@ -1,7 +1,7 @@
 #pragma once
 
-#include "world.hpp"
 #include "common.hpp"
+#include "world.hpp"
 
 class UiManager {
    public:
