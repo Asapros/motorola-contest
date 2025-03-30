@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iostream>
 #include <vector>
 
 #include "raylib.h"
@@ -17,9 +18,10 @@ void castAtAngle(Collidable& collidable,
                  float angle,
                  std::vector<float>& result) {
     for (const Vector2& vert : collidable.collider_vertices) {
-        Vector2 vert_transformed =
-            Vector2Add(Vector2Rotate(vert, -angle),
-                       Vector2{collidable.position.x, collidable.position.y});
+        Vector2 vert_transformed = Vector2Rotate(
+            Vector2Add(Vector2Rotate(vert, collidable.heading),
+                       Vector2{collidable.position.x, collidable.position.z}),
+            -angle);
         result.push_back(vert_transformed.x);
     }
 }
@@ -33,6 +35,10 @@ bool Collidable::checkAtAngle(Collidable& other, float angle) {
         *std::min_element(this_verts_casted.begin(), this_verts_casted.end());
     float this_verts_casted_max =
         *std::max_element(this_verts_casted.begin(), this_verts_casted.end());
+    /*std::cerr << "this_verts_casted_min = " << this_verts_casted_min <<
+     * '\n';*/
+    /*std::cerr << "this_verts_casted_max = " << this_verts_casted_max <<
+     * '\n';*/
 
     std::vector<float> other_verts_casted;
     other_verts_casted.reserve(other.collider_vertices.size());
@@ -42,26 +48,37 @@ bool Collidable::checkAtAngle(Collidable& other, float angle) {
         *std::min_element(other_verts_casted.begin(), other_verts_casted.end());
     float other_verts_casted_max =
         *std::max_element(other_verts_casted.begin(), other_verts_casted.end());
+    /*std::cerr << "other_verts_casted_min = " << other_verts_casted_min <<
+     * '\n';*/
+    /*std::cerr << "other_verts_casted_max = " << other_verts_casted_max <<
+     * '\n';*/
 
-    return this_verts_casted_max < other_verts_casted_min ||
-           this_verts_casted_min > other_verts_casted_max;
+    return !(this_verts_casted_max < other_verts_casted_min ||
+             this_verts_casted_min > other_verts_casted_max);
 }
 
 bool Collidable::checkCollision(Collidable& other) {
     for (uint32_t i = 0; i < collider_vertices.size(); i++) {
-        float angle = Vector2LineAngle(
-            collider_vertices[i],
-            collider_vertices[(i + 1) % collider_vertices.size()]);
-        if (!checkAtAngle(other, angle + PI / 2)) {
+        float angle =
+            Vector2LineAngle(
+                collider_vertices[i],
+                collider_vertices[(i + 1) % collider_vertices.size()]) +
+            PI / 2 + heading;
+        /*std::cerr << "angle = " << angle << '\n';*/
+        if (!checkAtAngle(other, angle)) {
             return false;
         }
     }
 
     for (uint32_t i = 0; i < other.collider_vertices.size(); i++) {
-        float angle = Vector2LineAngle(
-            other.collider_vertices[i],
-            other.collider_vertices[(i + 1) % other.collider_vertices.size()]);
-        if (!checkAtAngle(other, angle + PI / 2)) {
+        float angle =
+            Vector2LineAngle(
+                other.collider_vertices[i],
+                other.collider_vertices[(i + 1) %
+                                        other.collider_vertices.size()]) +
+            PI / 2 + heading;
+        /*std::cerr << "angle = " << angle << '\n';*/
+        if (!checkAtAngle(other, angle)) {
             return false;
         }
     }
