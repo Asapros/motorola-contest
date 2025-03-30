@@ -4,6 +4,7 @@
 
 #include <raylib.h>
 
+#include "collidable.hpp"
 #include "debug.hpp"
 #include "game.hpp"
 #include "ui.hpp"
@@ -107,16 +108,27 @@ void Game::draw() {
 void Game::loadLevel(std::string level) {
     debugLog("MENU", std::format("loading level '{}'", level));
     world = std::make_shared<World>();
+
     std::unique_ptr<Controller> vehicle_controller =
         std::make_unique<PlayerController>();
-    Vector3 position = {0.0, 0.0, 0.0};
     std::shared_ptr<Vehicle> entity = std::make_shared<Vehicle>(
-        modelManager.getModel("assets/car_prototype.glb"), position, 0.0,
-        std::vector<Vector2>(), 10.0, 10.0,
+        modelManager.getModel("assets/car_prototype.glb"),
+        Vector3{0.0, 0.0, 0.0}, 0.0,
+        std::vector<Vector2>{
+            {-1.0, -1.0}, {-1.0, 1.0}, {1.0, 1.0}, {1.0, -1.0}},
+        10.0, 10.0,
         std::vector<Wheel>{{1.0, 0.0, 0.2, 0.0, {0.5, 1.0}},
                            {1.0, 0.0, 0.2, 0.0, {0.5, -1.0}},
                            {1.0, 0.0, 0.2, 0.0, {-0.5, 1.0}},
                            {1.0, 0.0, 0.2, 0.0, {-0.5, -1.0}}},
         std::move(vehicle_controller));
     playerId = world->spawnEntity(std::dynamic_pointer_cast<Entity>(entity));
+
+    // Some example objects
+    std::shared_ptr<Collidable> obstacle_1 = std::make_shared<Collidable>(
+        modelManager.getModel("assets/car_prototype.glb"),
+        Vector3{6.0, 0.0, 3.0}, 0.1,
+        std::vector<Vector2>{
+            {-1.0, -1.0}, {-1.0, 1.0}, {1.0, 1.0}, {1.0, -1.0}});
+    world->spawnEntity(obstacle_1);
 }

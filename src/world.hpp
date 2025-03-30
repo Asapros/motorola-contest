@@ -2,7 +2,6 @@
 
 #include <map>
 #include <memory>
-#include <vector>
 
 #include "common.hpp"
 

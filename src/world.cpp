@@ -3,7 +3,7 @@
 #include "entity.hpp"
 #include "world.hpp"
 
-World::World() {}
+World::World() : next_eid(0), entities() {}
 
 void World::update(float delta_time) {
     for (auto& [entityId, entity] : entities) {
