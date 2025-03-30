@@ -28,14 +28,14 @@ void Rigidbody::update(float delta_time) {
             // std::cout << "Self\n";
             continue;
         }
-        std::cout << "Before dynamic_pointer_cast...\n";
+        /*std::cout << "Before dynamic_pointer_cast...\n";*/
         std::shared_ptr<Collidable> entity_collidable =
             std::dynamic_pointer_cast<Collidable>(entity.second);
-        std::cout << "After dynamic_pointer_cast!\n";
+        /*std::cout << "After dynamic_pointer_cast!\n";*/
         if (entity_collidable) {
-            std::cout << "Found collidable\n";
+            /*std::cout << "Found collidable\n";*/
             if (checkCollision(*entity_collidable)) {
-                std::cout << "Collision! " << eid << ", " << entity.second->eid
+                std::cerr << "Collision! " << eid << ", " << entity.second->eid
                           << '\n';
             }
         }
