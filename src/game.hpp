@@ -1,11 +1,12 @@
 #pragma once
 
+#include <memory>
 #include <optional>
 #include <string>
 
-#include "world.hpp"
 #include "model_manager.hpp"
 #include "ui.hpp"
+#include "world.hpp"
 
 enum class GameState {
     MainMenu,
@@ -21,7 +22,7 @@ class Game {
     std::optional<EntityId> playerId;
 
    public:
-    std::optional<World> world;
+    std::shared_ptr<World> world;
     UiManager ui;
     GameState state;
     bool paused;
