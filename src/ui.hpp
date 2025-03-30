@@ -1,8 +1,11 @@
 #pragma once
 
+#include <vector>
+
+#include "raygui.h"
+
 #include "common.hpp"
 #include "world.hpp"
-#include "raygui.h"
 
 struct Styles {
     int BORDER_COLOR = 0x00FF00FF;
@@ -21,6 +24,7 @@ class UiManager {
     int gap;
     void initStyles();
     void changeGameState(GameState state);
+
    public:
     GameState state;
     void drawMenu();
@@ -28,7 +32,13 @@ class UiManager {
     void drawPauseMenu();
     void drawSettings(GameState previousState);
     void updateSizes();
-    void drawMeter(float value, float multiplier, float second_value, Vector2 position, float radius, const char* unit, std::vector<int> values);
+    void drawMeter(float value,
+                   float multiplier,
+                   float second_value,
+                   Vector2 position,
+                   float radius,
+                   const char* unit,
+                   std::vector<int> values);
 
     UiManager();
 };

@@ -32,8 +32,7 @@ void Game::update(float delta_time) {
         if (IsKeyPressed(KEY_SPACE)) {
             state = GameState::InGame;
         }
-    }
-    else if (state == GameState::InGame) {
+    } else if (state == GameState::InGame) {
         if (!world) {
             this->loadLevel("test");
         }
@@ -52,7 +51,7 @@ void Game::update(float delta_time) {
 }
 
 void Game::draw() {
-    if(state != GameState::InGame && state != GameState::InSettings)
+    if (state != GameState::InGame && state != GameState::InSettings)
         previousState = state;
 
     if (state == GameState::MainMenu) {
@@ -61,28 +60,37 @@ void Game::draw() {
         return;
     }
     if (state == GameState::InGame) {
-        if (!world) return;
-        if (!playerId.has_value()) return;
+        if (!world)
+            return;
+        if (!playerId.has_value())
+            return;
 
         // THIS IS A VERY BIG TODO; DO NOT TOUCH THIS
         // if (state == GameState::InPause) {
         //      BeginShaderMode(blur_shader);
-                    BeginMode3D(camera);
-                    world->draw();
-                    EndMode3D();
+        BeginMode3D(camera);
+        world->draw();
+        EndMode3D();
         //      EndShaderMode();
         // }
         // else {
-            // BeginMode3D(camera);
-            // world->draw();
-            // EndMode3D();
+        // BeginMode3D(camera);
+        // world->draw();
+        // EndMode3D();
         // }
         ui.drawUi(*world, playerId.value());
 
-        ui.drawMeter(69.0f, 1, 3.0f, {GetScreenWidth() - 100, GetScreenHeight() - 100}, 80, NULL, { 0, 20, 40, 60, 80, 100, 120 });
-        ui.drawMeter(2137.0f, 1000, 0.0f, {GetScreenWidth() - 280, GetScreenHeight() - 100}, 80, "x1000", { 0, 1, 2, 3, 4, 5, 6 });
+        ui.drawMeter(
+            69.0f, 1, 3.0f,
+            {(float)(GetScreenWidth() - 100), (float)(GetScreenHeight() - 100)},
+            80, NULL, {0, 20, 40, 60, 80, 100, 120});
+        ui.drawMeter(
+            2137.0f, 1000, 0.0f,
+            {(float)(GetScreenWidth() - 280), (float)(GetScreenHeight() - 100)},
+            80, "x1000", {0, 1, 2, 3, 4, 5, 6});
 
-        // if (IsKeyPressed(KEY_F3)) { this->showDebug = !this->showDebug; } // TODO move to dedicated function
+        // if (IsKeyPressed(KEY_F3)) { this->showDebug = !this->showDebug; } //
+        // TODO move to dedicated function
 
         // if (!this->showDebug) return;
         // const int debugValuesSize = 15;
@@ -103,7 +111,6 @@ void Game::draw() {
         return;
     }
 }
-
 
 void Game::loadLevel(std::string level) {
     debugLog("MENU", std::format("loading level '{}'", level));

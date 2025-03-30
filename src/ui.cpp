@@ -1,10 +1,12 @@
 #include <format>
 #include <vector>
+
 #include "raylib.h"
 #include "raymath.h"
+
+#include "debug.hpp"
 #include "ui.hpp"
 #include "vehicle.hpp"
-#include "debug.hpp"
 
 UiManager::UiManager() {
     updateSizes();
@@ -54,10 +56,15 @@ void UiManager::drawMenu() {
 }
 
 void UiManager::drawUi([[maybe_unused]] World& world,
-                       [[maybe_unused]] EntityId playerId) {
-}
+                       [[maybe_unused]] EntityId playerId) {}
 
-void UiManager::drawMeter(float value, float multiplier, float second_value, Vector2 position, float radius, const char* unit, std::vector<int> values) {
+void UiManager::drawMeter(float value,
+                          float multiplier,
+                          float second_value,
+                          Vector2 position,
+                          float radius,
+                          const char* unit,
+                          std::vector<int> values) {
     if (values.empty()) {
         debugLog("GENERAL", "Empty meter's values list");
         return;
@@ -79,19 +86,20 @@ void UiManager::drawMeter(float value, float multiplier, float second_value, Vec
         char smallText[20];
         sprintf(smallText, "%d %s", (int)second_value, unit);
         int textWidth = MeasureText(smallText, GetScreenHeight() / 30);
-        DrawText(smallText, position.x - textWidth / 2, position.y + 30, GetScreenHeight() / 30, WHITE);
-    }
-    else if (second_value != 0.0f && unit == NULL) {
+        DrawText(smallText, position.x - textWidth / 2, position.y + 30,
+                 GetScreenHeight() / 30, WHITE);
+    } else if (second_value != 0.0f && unit == NULL) {
         char smallText[20];
         sprintf(smallText, "%d", (int)second_value);
         int textWidth = MeasureText(smallText, GetScreenHeight() / 30);
-        DrawText(smallText, position.x - textWidth / 2, position.y + 30, GetScreenHeight() / 30, WHITE);
-    }
-    else if (second_value == 0.0f && unit != NULL) {
+        DrawText(smallText, position.x - textWidth / 2, position.y + 30,
+                 GetScreenHeight() / 30, WHITE);
+    } else if (second_value == 0.0f && unit != NULL) {
         char smallText[20];
         sprintf(smallText, "%s", unit);
         int textWidth = MeasureText(smallText, GetScreenHeight() / 30);
-        DrawText(smallText, position.x - textWidth / 2, position.y + 30, GetScreenHeight() / 30, WHITE);
+        DrawText(smallText, position.x - textWidth / 2, position.y + 30,
+                 GetScreenHeight() / 30, WHITE);
     }
 
     float startAngle = -200;
@@ -105,7 +113,8 @@ void UiManager::drawMeter(float value, float multiplier, float second_value, Vec
         float radian = angle * DEG2RAD;
 
         int textX = (int)((float)position.x + cosf(radian) * (radius - 25.0f));
-        int textY = (int)((float)position.y + sinf(radian) * (radius - 25) - 10);
+        int textY =
+            (int)((float)position.y + sinf(radian) * (radius - 25) - 10);
 
         char valText[5];
         sprintf(valText, "%d", values[i]);
@@ -116,23 +125,26 @@ void UiManager::drawMeter(float value, float multiplier, float second_value, Vec
 
     if (value / multiplier <= values[numValues - 1]) {
         for (int i = 0; i < numValues - 1; i++) {
-            if (value / multiplier >= values[i] && value / multiplier <= values[i + 1]) {
-                float t = (value / multiplier - values[i]) / (float)(values[i + 1] - values[i]);
+            if (value / multiplier >= values[i] &&
+                value / multiplier <= values[i + 1]) {
+                float t = (value / multiplier - values[i]) /
+                          (float)(values[i + 1] - values[i]);
                 needleAngle = startAngle + i * angleStep + t * angleStep;
                 break;
             }
         }
-    }
-    else {
+    } else {
         float extraSpeed = value - values[numValues - 1];
         needleAngle = endAngle + (extraSpeed / 20.0f) * angleStep;
     }
 
     float needleRadian = needleAngle * DEG2RAD;
     float needleLength = radius - 20.0f;
-    Vector2 needleEnd = { position.x + cosf(needleRadian) * needleLength, position.y + sinf(needleRadian) * needleLength };
+    Vector2 needleEnd = {position.x + cosf(needleRadian) * needleLength,
+                         position.y + sinf(needleRadian) * needleLength};
 
-    DrawLineEx(Vector2{ (float)position.x, (float)position.y }, needleEnd, 5, RED);
+    DrawLineEx(Vector2{(float)position.x, (float)position.y}, needleEnd, 5,
+               RED);
 }
 
 void UiManager::drawSettings(GameState previousState) {
@@ -146,7 +158,8 @@ void UiManager::drawSettings(GameState previousState) {
                              (float)(menuHeight / 2 + gap), 200.0f, 80.0f};
 
     if (GuiButton(applyButton, "APPLY") || IsKeyPressed(KEY_ESCAPE)) {
-        if (previousState == GameState::MainMenu || previousState == GameState::InPause) {
+        if (previousState == GameState::MainMenu ||
+            previousState == GameState::InPause) {
             changeGameState(previousState);
         } else {
             changeGameState(GameState::InGame);
