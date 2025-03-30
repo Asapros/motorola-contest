@@ -1,7 +1,12 @@
-#include "rigidbody.hpp"
-#include "collidable.hpp"
+#include <iostream>
+#include <memory>
+
 #include "raylib.h"
 #include "raymath.h"
+
+#include "collidable.hpp"
+#include "rigidbody.hpp"
+#include "world.hpp"
 
 Rigidbody::Rigidbody(std::shared_ptr<ModelWrapper> model,
                      Vector3 position,
@@ -17,6 +22,24 @@ Rigidbody::Rigidbody(std::shared_ptr<ModelWrapper> model,
 
 void Rigidbody::update(float delta_time) {
     Entity::update(delta_time);
+
+    for (const auto& entity : world->entities) {
+        if (entity.second.get() == this) {
+            std::cout << "Self\n";
+            continue;
+        }
+        std::cout << "Before dynamic_pointer_cast...\n";
+        std::shared_ptr<Collidable> entity_collidable =
+            std::dynamic_pointer_cast<Collidable>(entity.second);
+        std::cout << "After dynamic_pointer_cast!\n";
+        if (entity_collidable) {
+            std::cout << "Found collidable\n";
+            if (checkCollision(*entity_collidable)) {
+                std::cout << "Collision! " << eid << ", " << entity.second->eid
+                          << '\n';
+            }
+        }
+    }
 
     Vector3 velocity = computeVelocity();
     position = Vector3Add(position, velocity);
