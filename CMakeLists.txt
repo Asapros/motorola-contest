@@ -21,7 +21,7 @@ file(GLOB_RECURSE project_sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/s
 add_executable(motorola_contest ${project_sources})
 # target_include_directories(motorola_contest PRIVATE "lib/")
 target_link_libraries(motorola_contest PRIVATE raylib)
-target_include_directories(motorola_contest PRIVATE "${raylib_SOURCE_DIR}/src")
+target_include_directories(motorola_contest SYSTEM PRIVATE "${raylib_SOURCE_DIR}/src")
 
 if(MSVC)
 	target_compile_options(motorola_contest PRIVATE /W4)
