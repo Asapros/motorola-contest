@@ -6,11 +6,7 @@
 Entity::Entity(std::shared_ptr<ModelWrapper> model,
                Vector3 position,
                float heading)
-    : world(nullptr),
-      eid(0),
-      model(model),
-      position(position),
-      heading(heading) {}
+    : world(), eid(0), model(model), position(position), heading(heading) {}
 
 Entity::~Entity() {}
 
