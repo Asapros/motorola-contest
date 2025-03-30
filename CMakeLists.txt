@@ -17,11 +17,23 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(raylib)
 
+include(FetchContent)
+FetchContent_Declare(
+	raygui
+	GIT_REPOSITORY "https://github.com/raysan5/raygui.git"
+	GIT_TAG "master"
+	GIT_PROGRESS TRUE
+	FIND_PACKAGE_ARGS
+)
+FetchContent_MakeAvailable(raygui)
+
 file(GLOB_RECURSE project_sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
 add_executable(motorola_contest ${project_sources})
 # target_include_directories(motorola_contest PRIVATE "lib/")
 target_link_libraries(motorola_contest PRIVATE raylib)
 target_include_directories(motorola_contest SYSTEM PRIVATE "${raylib_SOURCE_DIR}/src")
+target_include_directories(motorola_contest SYSTEM PRIVATE "${raygui_SOURCE_DIR}/src")
+
 
 if(MSVC)
 	target_compile_options(motorola_contest PRIVATE /W4)
@@ -40,6 +52,7 @@ message("project_sources_without_main=${project_sources_without_main}")
 add_executable(all-tests ${TESTS_SOURCES} ${project_sources_without_main})
 target_link_libraries(all-tests PRIVATE raylib)
 target_include_directories(all-tests PRIVATE "src" "${raylib_SOURCE_DIR}/src")
+target_include_directories(all-tests PRIVATE "src" "${raygui_SOURCE_DIR}/src")
 add_test(NAME all-tests COMMAND all-tests)
 enable_testing()
 

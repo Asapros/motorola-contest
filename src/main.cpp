@@ -22,7 +22,7 @@ int main() {
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetTargetFPS(60);
     InitWindow(screenWidth, screenHeight, "kubica");
-    SetExitKey(KEY_ESCAPE);
+    SetExitKey(0);
     Game game = Game();
 
     while (!WindowShouldClose()) {
