@@ -16,8 +16,8 @@ struct Wheel {
 };
 
 class Vehicle : public Rigidbody {
-   private:
    public:
+    int gear;
     std::vector<Wheel> wheels;
     std::unique_ptr<Controller> controller;
     void update(float delta_time);

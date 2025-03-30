@@ -33,12 +33,16 @@ Vehicle::Vehicle(std::shared_ptr<ModelWrapper> model,
                 mass,
                 moment_of_intertia),
       wheels(wheels),
-      controller(std::move(controller)) {}
+      controller(std::move(controller)),
+      gear(0) {}
 
 void Vehicle::update(float delta_time) {
     Rigidbody::update(delta_time);
 
-    Controls controls = controller->computeControls();
+    Controls controls = controller->computeControls(world, eid);
+    gear = controls.gear;
+
+    debugValues["ctl_gear"] = std::to_string(gear);
 
     // TODO: don't hardcode it here; make it possible to drive only subset of
     // wheels (i.e. front ones only)

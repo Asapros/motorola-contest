@@ -25,7 +25,7 @@ void Rigidbody::update(float delta_time) {
 
     for (const auto& entity : world->entities) {
         if (entity.second.get() == this) {
-            std::cout << "Self\n";
+            // std::cout << "Self\n";
             continue;
         }
         std::cout << "Before dynamic_pointer_cast...\n";

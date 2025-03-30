@@ -7,7 +7,8 @@
 static const std::set<std::string> ENABLED_GROUPS = {
     "MODEL",
     "MENU",
-    "GENERAL"
+    "GENERAL",
+    "CONTROL"
 };
 
 extern std::map<std::string, std::string> debugValues;
