@@ -6,8 +6,8 @@
 #include <memory>
 #include <sstream>
 
-#include "collidable.hpp"
 #include "raylib.h"
+#include "world.hpp"
 
 #ifdef _WIN32
 // It was quite difficult to make Windows.h and Raylib not have conflicts with
@@ -23,6 +23,7 @@
 
 class Game;
 
+#include "collidable.hpp"
 #include "debug.hpp"
 #include "entity.hpp"
 #include "game.hpp"
@@ -150,6 +151,16 @@ void ModelManager::loadMap(std::string map_path, Game* game) {
                 ss >> x >> y;
                 colliders[collider_id].emplace_back(x, y);
             }
+        } else if (cmd == "checkpoint") {
+            int checkpoint_id;
+            ss >> checkpoint_id;
+            std::cerr << "checkpoint " << checkpoint_id << '\n';
+            float ax, ay, bx, by, cx, cy, dx, dy;
+            ss >> ax >> ay >> bx >> by >> cx >> cy >> dx >> dy;
+
+            game->world->checkpoints[checkpoint_id] =
+                CheckpointZone{{Vector2{ax, ay}, Vector2{bx, by},
+                                Vector2{cx, cy}, Vector2{dx, dy}}};
         }
     }
 

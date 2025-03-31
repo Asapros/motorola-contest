@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <iostream>
 #include <memory>
 
@@ -5,7 +6,28 @@
 #include "entity.hpp"
 #include "world.hpp"
 
-World::World() : next_eid(0), entities(), ai_line({{1.0, 2.0}}) {}
+float triangleArea(Vector2 a, Vector2 b, Vector2 c) {
+    return std::abs(a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) /
+           2;
+}
+bool isPointInTriangle(Vector2 a, Vector2 b, Vector2 c, Vector2 p) {
+    float area_abp = triangleArea(a, b, p);
+    float area_acp = triangleArea(a, c, p);
+    float area_bcp = triangleArea(b, c, p);
+
+    float area_abc = triangleArea(a, b, c);
+
+    float quotient = (area_abp + area_acp + area_bcp) / area_abc;
+    // std::cerr << "quotient = " << quotient << '\n';
+    return quotient > 0.975 && quotient < 1.125;
+}
+
+bool CheckpointZone::isPointIn(Vector2 point) {
+    return isPointInTriangle(vertices[0], vertices[1], vertices[2], point) ||
+           isPointInTriangle(vertices[1], vertices[2], vertices[3], point);
+}
+
+World::World() : next_eid(0), entities(), ai_line({{1.0, 2.0}}), materials(), checkpoints() {}
 
 void World::update(float delta_time) {
     for (auto& [entityId, entity] : entities) {
@@ -20,14 +42,22 @@ void World::draw() {
         entity->draw();
     }
 
+    // Draw terrain
     for (int i = 0; i < materials.size(); i++) {
         for (int j = 0; j < materials.size(); j++) {
             // std::cerr << i << ',' << j << '\n';
-            DrawCube(
-                Vector3{i * grid_cell_size, 0, j * grid_cell_size},
-                grid_cell_size, 0.1, grid_cell_size,
-                getMaterialAtPosition({i * grid_cell_size, j * grid_cell_size})
-                    .color);
+            DrawCube(Vector3{i * grid_cell_size, 0, j * grid_cell_size},
+                     grid_cell_size, 0.1, grid_cell_size,
+                     getMaterialAtCell(i, j).color);
+        }
+    }
+
+    // (For debug) Draw checkpoint zones
+    for (const auto& cpz : checkpoints) {
+        for (int i = 0; i < 4; i++) {
+            DrawCube(Vector3{cpz.second.vertices[i].x, 0.0f,
+                             cpz.second.vertices[i].y},
+                     0.1, 2.0, 0.1, Color{128, 255, 128, 255});
         }
     }
 }
@@ -45,11 +75,9 @@ EntityId World::spawnEntity(std::shared_ptr<Entity> entity) {
     return entity->eid;
 }
 
-GroundMaterial World::getMaterialAtPosition(Vector2 pos) {
-    int ix = (int)(pos.x / grid_cell_size);
-    int iy = (int)(pos.y / grid_cell_size);
-
-    if (ix < 0 || ix >= materials.size() || iy < 0 || iy >= materials.size()) {
+GroundMaterial World::getMaterialAtCell(int ix, int iy) {
+    if (ix < 0 || ix >= (int)materials.size() || iy < 0 ||
+        iy >= (int)materials.size()) {
         return {0.2, 0.15, {255, 192, 0, 255}};
     }
 
@@ -62,4 +90,11 @@ GroundMaterial World::getMaterialAtPosition(Vector2 pos) {
         default:
             return {0.2, 0.15, {255, 192, 0, 255}};
     }
+}
+
+GroundMaterial World::getMaterialAtPosition(Vector2 pos) {
+    int ix = (int)(pos.x / grid_cell_size);
+    int iy = (int)(pos.y / grid_cell_size);
+
+    return getMaterialAtCell(ix, iy);
 }

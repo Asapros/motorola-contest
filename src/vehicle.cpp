@@ -1,7 +1,7 @@
 #include <cmath>
+#include <format>
 #include <iostream>
 #include <memory>
-#include <format>
 
 #include <raylib.h>
 #include <raymath.h>
@@ -22,7 +22,7 @@ float PortedVector2CrossProduct(Vector2 v1, Vector2 v2) {
 }
 
 float sigmoid(float x) {
-    return 1/(1+std::exp(-x));
+    return 1 / (1 + std::exp(-x));
 }
 
 float calculate_engine_torque(int gear, int gear_levels, float velocity) {
@@ -75,7 +75,7 @@ void Vehicle::update(float delta_time) {
     debugValues["phys_ang_mom"] = std::to_string(angular_momentum);
 
     debugValues["phys_direction"] = std::to_string(heading);
-    
+
     Vector3 velocity = computeVelocity();
     
     engine_torque = calculate_engine_torque(
@@ -95,7 +95,6 @@ void Vehicle::update(float delta_time) {
             }
         }
     }
-
 
     float grav_force = mass * GRAVITY_ACCELERATION;
 
@@ -203,4 +202,15 @@ void Vehicle::update(float delta_time) {
 
     debugValues["phys_velocity"] =
         std::to_string(Vector3Length(computeVelocity()));
+
+    // Check if is in checkpoint zone
+    for (auto& cpz : world->checkpoints) {
+        if (cpz.second.isPointIn(Vector2{position.x, position.z})) {
+            std::cerr << "Vehicle " << eid << " in checkpoint zone "
+                      << cpz.first << '\n';
+            // debugLog("GENERAL", std::format("Vehicle {} in checkpoint zone
+            // {}",
+            //                                 eid, cpz.first));
+        }
+    }
 }
