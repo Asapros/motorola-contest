@@ -21,7 +21,7 @@ const int screenHeight = 840;
 int main() {
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetTargetFPS(60);
-    InitWindow(screenWidth, screenHeight, "kubica");
+    InitWindow(screenWidth, screenHeight, "RAYCER");
     SetExitKey(0);
 
     // Restrict scope of game variable, so it's destructed before CloseWindow()

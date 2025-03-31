@@ -31,6 +31,7 @@ class UiManager {
     void changeGameState(GameState state);
    public:
     GameState state;
+    bool isFullscreen;
     void drawMenu();
     void drawLeaderboard(const std::vector<PlayerInfo>& players);
     void drawUi(World* world, EntityId player);

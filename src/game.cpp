@@ -52,6 +52,22 @@ void Game::update(float delta_time) {
             state = GameState::InGame;
         }
     }
+    if(ui.isFullscreen) {
+        if(!IsWindowFullscreen()) {
+            int displayWidth = GetMonitorWidth(GetCurrentMonitor());
+            int displayHeight = GetMonitorHeight(GetCurrentMonitor());
+            SetWindowState(FLAG_FULLSCREEN_MODE);
+            SetWindowSize(displayWidth, displayHeight);
+            ui.updateSizes();
+        }
+    }
+    else {
+        if(IsWindowFullscreen()) {
+            ClearWindowState(FLAG_FULLSCREEN_MODE);
+            SetWindowSize(1000, 840);
+            ui.updateSizes();
+        }
+    }
 }
 
 void Game::draw() {
