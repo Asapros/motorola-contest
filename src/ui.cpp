@@ -58,6 +58,7 @@ void UiManager::drawMenu() {
 void UiManager::drawUi([[maybe_unused]] World& world,
                        [[maybe_unused]] EntityId playerId) {}
 
+
 void UiManager::drawMeter(float value,
                           float multiplier,
                           float second_value,

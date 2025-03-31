@@ -89,16 +89,16 @@ void Game::draw() {
             {(float)(GetScreenWidth() - 280), (float)(GetScreenHeight() - 100)},
             80, "x1000", {0, 1, 2, 3, 4, 5, 6});
 
-        // if (IsKeyPressed(KEY_F3)) { this->showDebug = !this->showDebug; } //
+        if (IsKeyPressed(KEY_F3)) { this->showDebug = !this->showDebug; } //
         // TODO move to dedicated function
 
-        // if (!this->showDebug) return;
-        // const int debugValuesSize = 15;
-        // int offset = 0;
-        // for (const auto &pair : debugValues) {
-        //     DrawText(std::format("{}: {}", pair.first, pair.second).c_str(),
-        //     0, offset * debugValuesSize, debugValuesSize, VIOLET); offset++;
-        // }
+        if (!this->showDebug) return;
+        const int debugValuesSize = 15;
+        int offset = 0;
+        for (const auto &pair : debugValues) {
+            DrawText(std::format("{}: {}", pair.first, pair.second).c_str(),
+            0, offset * debugValuesSize, debugValuesSize, VIOLET); offset++;
+        }
     }
     if (state == GameState::InPause) {
         ui.drawPauseMenu();
