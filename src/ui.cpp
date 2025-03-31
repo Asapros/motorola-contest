@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "raymath.h"
+#include "raygui.h"
 
 #include "debug.hpp"
 #include "ui.hpp"
