@@ -41,12 +41,22 @@ void World::draw() {
         entity->draw();
     }
 
+    // Draw terrain
     for (int i = 0; i < materials.size(); i++) {
         for (int j = 0; j < materials.size(); j++) {
             // std::cerr << i << ',' << j << '\n';
             DrawCube(Vector3{i * grid_cell_size, 0, j * grid_cell_size},
                      grid_cell_size, 0.1, grid_cell_size,
                      getMaterialAtCell(i, j).color);
+        }
+    }
+
+    // (For debug) Draw checkpoint zones
+    for (const auto& cpz : checkpoints) {
+        for (int i = 0; i < 4; i++) {
+            DrawCube(Vector3{cpz.second.vertices[i].x, 0.0f,
+                             cpz.second.vertices[i].y},
+                     0.1, 2.0, 0.1, Color{128, 255, 128, 255});
         }
     }
 }
