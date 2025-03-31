@@ -18,7 +18,8 @@ bool isPointInTriangle(Vector2 a, Vector2 b, Vector2 c, Vector2 p) {
     float area_abc = triangleArea(a, b, c);
 
     float quotient = (area_abp + area_acp + area_bcp) / area_abc;
-    return quotient > 0.975 && quotient < 0.125;
+    // std::cerr << "quotient = " << quotient << '\n';
+    return quotient > 0.975 && quotient < 1.125;
 }
 
 bool CheckpointZone::isPointIn(Vector2 point) {

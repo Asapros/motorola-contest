@@ -1,7 +1,7 @@
 #include <cmath>
+#include <format>
 #include <iostream>
 #include <memory>
-#include <format>
 
 #include <raylib.h>
 #include <raymath.h>
@@ -22,14 +22,14 @@ float PortedVector2CrossProduct(Vector2 v1, Vector2 v2) {
 }
 
 float sigmoid(float x) {
-    return 1/(1+std::exp(-x));
+    return 1 / (1 + std::exp(-x));
 }
 
 float calculate_engine_torque(int gear, int gear_levels, float velocity) {
-    float gearbox_coefficient = (float) (gear_levels - gear + 1)/ (float) gear_levels;
+    float gearbox_coefficient =
+        (float)(gear_levels - gear + 1) / (float)gear_levels;
     // return gearbox_coefficient;
     return gearbox_coefficient * sigmoid(2 - 0.1 * velocity / gear);
-
 }
 
 Vehicle::Vehicle(std::shared_ptr<ModelWrapper> model,
@@ -68,12 +68,12 @@ void Vehicle::update(float delta_time) {
     debugValues["phys_ang_mom"] = std::to_string(angular_momentum);
 
     debugValues["phys_direction"] = std::to_string(heading);
-    
+
     Vector3 velocity = computeVelocity();
-    
-    float engine_torque = calculate_engine_torque(
-        gear, MAX_GEAR, Vector3Length(velocity));
-    
+
+    float engine_torque =
+        calculate_engine_torque(gear, MAX_GEAR, Vector3Length(velocity));
+
     debugValues["phys_engine_toruqe"] = std::to_string(engine_torque);
 
     for (uint32_t i = 0; i < wheels.size(); i++) {
@@ -88,7 +88,6 @@ void Vehicle::update(float delta_time) {
             }
         }
     }
-
 
     float grav_force = mass * GRAVITY_ACCELERATION;
 
@@ -196,4 +195,15 @@ void Vehicle::update(float delta_time) {
 
     debugValues["phys_velocity"] =
         std::to_string(Vector3Length(computeVelocity()));
+
+    // Check if is in checkpoint zone
+    for (auto& cpz : world->checkpoints) {
+        if (cpz.second.isPointIn(Vector2{position.x, position.z})) {
+            std::cerr << "Vehicle " << eid << " in checkpoint zone "
+                      << cpz.first << '\n';
+            // debugLog("GENERAL", std::format("Vehicle {} in checkpoint zone
+            // {}",
+            //                                 eid, cpz.first));
+        }
+    }
 }
