@@ -32,6 +32,7 @@ class World {
    public:
     std::map<EntityId, std::shared_ptr<Entity>> entities;
     std::vector<std::vector<char>> materials;
+    std::map<int, CheckpointZone> checkpoints;
 
     World();
     EntityId spawnEntity(std::shared_ptr<Entity> entity);

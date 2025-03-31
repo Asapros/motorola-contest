@@ -21,9 +21,12 @@ bool isPointInTriangle(Vector2 a, Vector2 b, Vector2 c, Vector2 p) {
     return quotient > 0.975 && quotient < 0.125;
 }
 
-bool CheckpointZone::isPointIn(Vector2 point) {}
+bool CheckpointZone::isPointIn(Vector2 point) {
+    return isPointInTriangle(vertices[0], vertices[1], vertices[2], point) ||
+           isPointInTriangle(vertices[1], vertices[2], vertices[3], point);
+}
 
-World::World() : next_eid(0), entities() {}
+World::World() : next_eid(0), entities(), materials(), checkpoints() {}
 
 void World::update(float delta_time) {
     for (auto& [entityId, entity] : entities) {
