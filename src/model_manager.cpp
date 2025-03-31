@@ -6,7 +6,6 @@
 #include <memory>
 #include <sstream>
 
-#include "collidable.hpp"
 #include "raylib.h"
 
 #ifdef _WIN32
@@ -23,6 +22,7 @@
 
 class Game;
 
+#include "collidable.hpp"
 #include "debug.hpp"
 #include "entity.hpp"
 #include "game.hpp"

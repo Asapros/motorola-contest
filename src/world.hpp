@@ -16,6 +16,12 @@ struct GroundMaterial {
     Color color;
 };
 
+struct CheckpointZone {
+    Vector2 vertices[4];
+
+    bool isPointIn(Vector2 point);
+};
+
 constexpr float grid_cell_size = 5.0f;
 
 class World {

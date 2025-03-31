@@ -1,9 +1,27 @@
+#include <cstdlib>
 #include <iostream>
 #include <memory>
 
 #include <raylib.h>
 #include "entity.hpp"
 #include "world.hpp"
+
+float triangleArea(Vector2 a, Vector2 b, Vector2 c) {
+    return std::abs(a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) /
+           2;
+}
+bool isPointInTriangle(Vector2 a, Vector2 b, Vector2 c, Vector2 p) {
+    float area_abp = triangleArea(a, b, p);
+    float area_acp = triangleArea(a, c, p);
+    float area_bcp = triangleArea(b, c, p);
+
+    float area_abc = triangleArea(a, b, c);
+
+    float quotient = (area_abp + area_acp + area_bcp) / area_abc;
+    return quotient > 0.975 && quotient < 0.125;
+}
+
+bool CheckpointZone::isPointIn(Vector2 point) {}
 
 World::World() : next_eid(0), entities() {}
 
