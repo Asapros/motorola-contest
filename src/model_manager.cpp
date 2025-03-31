@@ -81,8 +81,11 @@ std::shared_ptr<ModelWrapper> ModelManager::getModel(std::string model_path) {
 
     std::filesystem::path resolved_path = assets_location;
     resolved_path.append(model_path);
+    resolved_path = resolved_path.lexically_normal();
     std::cerr << "resolved_path = " << resolved_path << '\n';
 
+    // std::shared_ptr<ModelWrapper> new_model =
+    //     std::make_shared<ModelWrapper>(resolved_path.generic_string());
     std::shared_ptr<ModelWrapper> new_model =
         std::make_shared<ModelWrapper>(resolved_path.string());
     models[model_path] = new_model;
