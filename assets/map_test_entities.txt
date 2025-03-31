@@ -3,6 +3,6 @@ collider 1  4  -1 -1  -1 1  1 1  1 -1
 entity model car_prototype.glb position 3.2 0 -11.6 heading 45
 entity model car_prototype.glb position -2.9 0 6.4
 entity model Car.obj position 12.5 0 -4.6 heading 45 collider 1
-entity model wheel.obj position -12.0 0 4.2
+# entity model wheel.obj position -12.0 0 4.2
 
 checkpoint 0  -12 -6  -16 -6  -16 -2  -12 -2
