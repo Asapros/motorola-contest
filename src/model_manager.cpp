@@ -165,10 +165,13 @@ void ModelManager::loadMap(std::string map_path, Game* game) {
 
     int grid_size;
     materials_ifs >> grid_size;
+    game->world->materials.resize(grid_size);
+    for (int i = 0; i < grid_size; i++) {
+        game->world->materials[i].resize(grid_size);
+    }
     for (int i = 0; i < grid_size; i++) {
         for (int j = 0; j < grid_size; j++) {
-            char ch;
-            materials_ifs >> ch;
+            materials_ifs >> game->world->materials[j][i];
         }
     }
 }

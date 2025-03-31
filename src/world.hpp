@@ -4,9 +4,19 @@
 #include <memory>
 #include <vector>
 
+#include "raylib.h"
+
 #include "common.hpp"
 
 class Entity;
+
+struct GroundMaterial {
+    float static_friction_coef;
+    float kinetic_friction_coef;
+    Color color;
+};
+
+constexpr float grid_cell_size = 5.0f;
 
 class World {
    private:
@@ -21,4 +31,5 @@ class World {
     EntityId spawnEntity(std::shared_ptr<Entity> entity);
     void update(float delta_time);
     void draw();
+    GroundMaterial getMaterialAtPosition(Vector2 pos);
 };
