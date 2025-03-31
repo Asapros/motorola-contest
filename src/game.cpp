@@ -17,8 +17,7 @@
 GameState previousState;
 
 Game::Game()
-    : show_debug(false),
-      player_id(),
+    : player_id(),
       world(),
       ui(UiManager()),
       state(GameState::MainMenu) {
@@ -81,21 +80,7 @@ void Game::draw() {
         // world->draw();
         // EndMode3D();
         // }
-        ui.drawUi(world.get(), player_id.value());
-
-        if (IsKeyPressed(KEY_F3)) {
-            this->show_debug = !this->show_debug;
-        }  // TODO move to dedicated function
-
-        if (!this->show_debug)
-            return;
-        const int debugValuesSize = 15;
-        int offset = 0;
-        for (const auto& pair : debugValues) {
-            DrawText(std::format("{}: {}", pair.first, pair.second).c_str(), 0,
-                     offset * debugValuesSize, debugValuesSize, VIOLET);
-            offset++;
-        }
+        ui.drawUi(world.get(), player_id.value());       
     }
     if (state == GameState::InPause) {
         ui.drawPauseMenu();

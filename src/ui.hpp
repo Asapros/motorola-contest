@@ -26,6 +26,7 @@ class UiManager {
     int menuWidth;
     int menuHeight;
     int gap;
+    bool show_debug;
     void initStyles();
     void changeGameState(GameState state);
    public:

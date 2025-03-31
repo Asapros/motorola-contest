@@ -13,6 +13,7 @@ UiManager::UiManager() {
     initStyles();
     changeGameState(GameState::MainMenu);
     showExitMessage = false;
+    show_debug = false;
 }
 
 void UiManager::drawMenu() {
@@ -57,6 +58,20 @@ void UiManager::drawUi(World* world, EntityId playerId) {
     float rpm = player->computeRPM(Vector3Length(player->computeVelocity()), player->gear, player->wheels[0].radius, player->engine_torque);
     drawSpeedometer(Vector3Length(player->computeVelocity()) * 100, player->gear);
     drawRPMmeter(rpm);
+
+    if (IsKeyPressed(KEY_F3)) {
+        this->show_debug = !this->show_debug;
+    }  
+
+    if (!this->show_debug)
+        return;
+    const int debugValuesSize = 15;
+    int offset = 0;
+    for (const auto& pair : debugValues) {
+        DrawText(std::format("{}: {}", pair.first, pair.second).c_str(), 0,
+                    offset * debugValuesSize, debugValuesSize, VIOLET);
+        offset++;
+    }
 }
 
 void UiManager::drawLeaderboard(const std::vector<PlayerInfo>& players) {

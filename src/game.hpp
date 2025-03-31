@@ -13,7 +13,6 @@ class Game {
     std::shared_ptr<ModelManager> model_manager;
     void loadLevel(std::string level);
     Camera camera;
-    bool show_debug;
     std::optional<EntityId> player_id;
 
    public:
