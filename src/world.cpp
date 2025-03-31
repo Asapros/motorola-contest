@@ -49,6 +49,10 @@ GroundMaterial World::getMaterialAtPosition(Vector2 pos) {
     int ix = (int)(pos.x / grid_cell_size);
     int iy = (int)(pos.y / grid_cell_size);
 
+    if (ix < 0 || ix >= materials.size() || iy < 0 || iy >= materials.size()) {
+        return {0.2, 0.15, {255, 192, 0, 255}};
+    }
+
     char mat_char = materials[ix][iy];
     switch (mat_char) {
         case '.':
