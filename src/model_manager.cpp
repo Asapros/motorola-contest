@@ -1,8 +1,10 @@
 #include <cstdlib>
 #include <filesystem>
 #include <format>
+#include <fstream>
 #include <iostream>
 #include <memory>
+#include <sstream>
 
 #include "raylib.h"
 
@@ -18,7 +20,11 @@
 /*extern int GetModuleFileNameA(void* hModule, char* lpFilename, int nSize);*/
 #endif
 
+class Game;
+
 #include "debug.hpp"
+#include "entity.hpp"
+#include "game.hpp"
 #include "model_manager.hpp"
 
 std::filesystem::path get_executable_location() {
@@ -81,10 +87,45 @@ std::shared_ptr<ModelWrapper> ModelManager::getModel(std::string model_path) {
     return new_model;
 }
 
-void ModelManager::loadMap(std::string map_path) {
+void ModelManager::loadMap(std::string map_path, Game* game) {
     std::filesystem::path map_entities_path = assets_location;
     map_entities_path.append(map_path);
     map_entities_path.concat("_entities.txt");
+
+    std::ifstream entities_ifs(map_entities_path);
+    if (!entities_ifs.is_open()) {
+        std::cerr << "Couldn\'t load map!\n";
+        std::exit(1);
+    }
+
+    std::string line_buf;
+    while (std::getline(entities_ifs, line_buf)) {
+        std::stringstream ss(line_buf);
+        std::string cmd;
+        ss >> cmd;
+
+        if (cmd == "entity") {
+            std::string model;
+            Vector3 position;
+            float heading;
+
+            while (ss) {
+                std::string param_name;
+                ss >> param_name;
+                if (param_name == "model") {
+                    ss >> model;
+                } else if (param_name == "position") {
+                    ss >> position.x >> position.y >> position.y;
+                } else if (param_name == "heading") {
+                    ss >> heading;
+                }
+            }
+
+            std::shared_ptr<Entity> ent =
+                std::make_shared<Entity>(getModel(model), position, heading);
+            game->world->spawnEntity(ent);
+        }
+    }
 
     std::filesystem::path map_materials_path = assets_location;
     map_materials_path.append(map_path);

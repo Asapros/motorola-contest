@@ -1,4 +1,5 @@
 #include <format>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -7,6 +8,7 @@
 #include "collidable.hpp"
 #include "debug.hpp"
 #include "game.hpp"
+#include "model_manager.hpp"
 #include "ui.hpp"
 #include "vehicle.hpp"
 #include "world.hpp"
@@ -14,12 +16,12 @@
 GameState previousState;
 
 Game::Game()
-    : modelManager(ModelManager()),
-      showDebug(false),
-      playerId(),
+    : show_debug(false),
+      player_id(),
       world(),
       ui(UiManager()),
       state(GameState::MainMenu) {
+    model_manager = std::make_shared<ModelManager>();
     camera = {{30.0f, 30.0f, 30.0f},
               {0.0f, 0.0f, 0.0f},
               {0.0f, 1.0f, 0.0f},
@@ -62,7 +64,7 @@ void Game::draw() {
     if (state == GameState::InGame) {
         if (!world)
             return;
-        if (!playerId.has_value())
+        if (!player_id.has_value())
             return;
 
         // THIS IS A VERY BIG TODO; DO NOT TOUCH THIS
@@ -78,7 +80,7 @@ void Game::draw() {
         // world->draw();
         // EndMode3D();
         // }
-        ui.drawUi(*world, playerId.value());
+        ui.drawUi(*world, player_id.value());
 
         ui.drawMeter(
             69.0f, 1, 3.0f,
@@ -119,7 +121,8 @@ void Game::loadLevel(std::string level) {
     std::unique_ptr<Controller> vehicle_controller =
         std::make_unique<PlayerController>();
     std::shared_ptr<Vehicle> entity = std::make_shared<Vehicle>(
-        modelManager.getModel("car_prototype.glb"), Vector3{0.0, 0.0, 0.0}, 0.0,
+        model_manager->getModel("car_prototype.glb"), Vector3{0.0, 0.0, 0.0},
+        0.0,
         std::vector<Vector2>{
             {-1.0, -1.0}, {-1.0, 1.0}, {1.0, 1.0}, {1.0, -1.0}},
         10.0, 10.0,
@@ -128,11 +131,12 @@ void Game::loadLevel(std::string level) {
                            {1.0, 0.0, 0.2, 0.0, {-0.5, 1.0}},
                            {1.0, 0.0, 0.2, 0.0, {-0.5, -1.0}}},
         std::move(vehicle_controller));
-    playerId = world->spawnEntity(std::dynamic_pointer_cast<Entity>(entity));
+    player_id = world->spawnEntity(std::dynamic_pointer_cast<Entity>(entity));
 
     // Some example objects
     std::shared_ptr<Collidable> obstacle_1 = std::make_shared<Collidable>(
-        modelManager.getModel("car_prototype.glb"), Vector3{6.0, 0.0, 3.0}, 0.1,
+        model_manager->getModel("car_prototype.glb"), Vector3{6.0, 0.0, 3.0},
+        0.1,
         std::vector<Vector2>{
             {-1.0, -1.0}, {-1.0, 1.0}, {1.0, 1.0}, {1.0, -1.0}});
     world->spawnEntity(obstacle_1);

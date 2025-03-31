@@ -10,11 +10,11 @@
 
 class Game {
    private:
-    ModelManager modelManager;
+    std::shared_ptr<ModelManager> model_manager;
     void loadLevel(std::string level);
     Camera camera;
-    bool showDebug;
-    std::optional<EntityId> playerId;
+    bool show_debug;
+    std::optional<EntityId> player_id;
 
    public:
     std::shared_ptr<World> world;
