@@ -1,13 +1,12 @@
 #include <format>
 #include <vector>
-
 #include "raylib.h"
-#include "raymath.h"
 #include "raygui.h"
-
-#include "debug.hpp"
+#include "raymath.h"
 #include "ui.hpp"
 #include "vehicle.hpp"
+#include "debug.hpp"
+#include "leaderboard.hpp"
 
 UiManager::UiManager() {
     updateSizes();
@@ -17,10 +16,7 @@ UiManager::UiManager() {
 }
 
 void UiManager::drawMenu() {
-    if (IsKeyPressed(KEY_N))
-        changeGameState(GameState::InGame);
-
-    DrawText("RAYDER", 20, 20, 20, WHITE);
+    DrawText("RAYCER", 20, 20, 20, WHITE);
 
     Rectangle playButton = {(float)(menuWidth / 2 - 100),
                             (float)(menuHeight / 2 - gap), 200.0f, 80.0f};
@@ -56,53 +52,54 @@ void UiManager::drawMenu() {
     }
 }
 
-void UiManager::drawUi([[maybe_unused]] World& world,
-                       [[maybe_unused]] EntityId playerId) {}
+void UiManager::drawUi(World* world, EntityId playerId) {
+    auto player = dynamic_cast<Vehicle*>(world->entities[playerId].get());
+    debugLog("UI", std::to_string(Vector3Length(player->computeVelocity())));
+    drawSpeedometer(Vector3Length(player->computeVelocity()), 2.0f);
+}
 
+void UiManager::drawLeaderboard(const std::vector<PlayerInfo>& players) {
+    int posTextWidth = MeasureText("POS", 16);
+    int idTextWidth = MeasureText("ID", 16);
+    int timeTextWidth = MeasureText("TIME", 16);
+    int backgroundWidth = posTextWidth + (70 - posTextWidth) + idTextWidth + (140 - idTextWidth) + timeTextWidth - 40;
+    DrawRectangle(0, 0, backgroundWidth, (80 + (30 * players.size())), GetColor(0x00000088));
 
-void UiManager::drawMeter(float value,
-                          float multiplier,
-                          float second_value,
-                          Vector2 position,
-                          float radius,
-                          const char* unit,
-                          std::vector<int> values) {
-    if (values.empty()) {
-        debugLog("GENERAL", "Empty meter's values list");
-        return;
+    int leaderboardTextWidth = MeasureText("Leaderboard", 20);
+    int leaderboardX = (backgroundWidth - leaderboardTextWidth) / 2;
+    DrawText("Leaderboard", leaderboardX, 20, 20, WHITE);
+    
+    double firstPlayerTime = players[0].seconds;
+    
+    DrawText("POS", 20, 60, 16, WHITE);
+    DrawText("ID", 70, 60, 16, WHITE);  
+    DrawText("TIME", 140, 60, 16, WHITE);    
+
+    for (int i = 0; i < players.size(); i++) {
+        int yOffset = 80 + (i * 30);
+        DrawText(TextFormat("%u.", players[i].place), 20, yOffset, 16, WHITE);
+        DrawText(TextFormat("%i", players[i].playerId), 70, yOffset, 16, WHITE);        
+        if (i == 0) {
+            DrawText(TextFormat("%.2f s", players[i].seconds), 140, yOffset, 16, WHITE);
+        } else {
+            DrawText(TextFormat("+%.2f s", players[i].seconds - firstPlayerTime), 140, yOffset, 16, RED);
+        }
     }
+}
 
-    int numValues = values.size();
+void UiManager::drawSpeedometer(float value, float gear) {
+    Vector2 position = {GetScreenWidth() - speedDialPositionOffset.x, GetScreenHeight() - speedDialPositionOffset.y};
+    int numValues = speedValues.size();
     int v_min = 0;
-    int v_max = values[numValues - 1];
+    int v_max = speedValues[numValues - 1];
     float interpolatedValue = Lerp((float)v_min, (float)v_max, value);
-
-    if (multiplier != 1) {
-        if (value / multiplier > v_max)
-            value = v_max * multiplier;
-    }
 
     DrawCircleLines(position.x, position.y, radius, WHITE);
 
-    if (second_value != 0.0f && unit != NULL) {
-        char smallText[20];
-        sprintf(smallText, "%d %s", (int)second_value, unit);
-        int textWidth = MeasureText(smallText, GetScreenHeight() / 30);
-        DrawText(smallText, position.x - textWidth / 2, position.y + 30,
-                 GetScreenHeight() / 30, WHITE);
-    } else if (second_value != 0.0f && unit == NULL) {
-        char smallText[20];
-        sprintf(smallText, "%d", (int)second_value);
-        int textWidth = MeasureText(smallText, GetScreenHeight() / 30);
-        DrawText(smallText, position.x - textWidth / 2, position.y + 30,
-                 GetScreenHeight() / 30, WHITE);
-    } else if (second_value == 0.0f && unit != NULL) {
-        char smallText[20];
-        sprintf(smallText, "%s", unit);
-        int textWidth = MeasureText(smallText, GetScreenHeight() / 30);
-        DrawText(smallText, position.x - textWidth / 2, position.y + 30,
-                 GetScreenHeight() / 30, WHITE);
-    }
+    char smallText[20];
+    sprintf(smallText, "%d", (int)gear);
+    int textWidth = MeasureText(smallText, GetScreenHeight() / 30);
+    DrawText(smallText, position.x - textWidth / 2, position.y + 30, GetScreenHeight() / 30, WHITE);
 
     float startAngle = -200;
     float endAngle = 20;
@@ -115,43 +112,90 @@ void UiManager::drawMeter(float value,
         float radian = angle * DEG2RAD;
 
         int textX = (int)((float)position.x + cosf(radian) * (radius - 25.0f));
-        int textY =
-            (int)((float)position.y + sinf(radian) * (radius - 25) - 10);
+        int textY = (int)((float)position.y + sinf(radian) * (radius - 25) - 10);
 
         char valText[5];
-        sprintf(valText, "%d", values[i]);
+        sprintf(valText, "%d", speedValues[i]);
 
         int textWidth = MeasureText(valText, 20);
         DrawText(valText, textX - textWidth / 2, textY, 20, WHITE);
     }
 
-    if (value / multiplier <= values[numValues - 1]) {
+    if (value <= speedValues[numValues - 1]) {
         for (int i = 0; i < numValues - 1; i++) {
-            if (value / multiplier >= values[i] &&
-                value / multiplier <= values[i + 1]) {
-                float t = (value / multiplier - values[i]) /
-                          (float)(values[i + 1] - values[i]);
+            if (value >= speedValues[i] && value <= speedValues[i + 1]) {
+                float t = (value - speedValues[i]) / (float)(speedValues[i + 1] - speedValues[i]);
                 needleAngle = startAngle + i * angleStep + t * angleStep;
                 break;
             }
         }
-    } else {
-        float extraSpeed = value - values[numValues - 1];
+    }
+    else {
+        float extraSpeed = value - speedValues[numValues - 1];
         needleAngle = endAngle + (extraSpeed / 20.0f) * angleStep;
     }
 
     float needleRadian = needleAngle * DEG2RAD;
     float needleLength = radius - 20.0f;
-    Vector2 needleEnd = {position.x + cosf(needleRadian) * needleLength,
-                         position.y + sinf(needleRadian) * needleLength};
+    Vector2 needleEnd = { position.x + cosf(needleRadian) * needleLength, position.y + sinf(needleRadian) * needleLength };
 
-    DrawLineEx(Vector2{(float)position.x, (float)position.y}, needleEnd, 5,
-               RED);
+    DrawLineEx(Vector2{ (float)position.x, (float)position.y }, needleEnd, 5, RED);
+}
+
+void UiManager::drawRPMmeter(float value) {
+    value /= 1000;
+    Vector2 position = {GetScreenWidth() - RPMDialPositionOffset.x, GetScreenHeight() - RPMDialPositionOffset.y};
+    int numValues = RPMValues.size();
+    int v_min = 0;
+    int v_max = RPMValues[numValues - 1];
+    float interpolatedValue = Lerp((float)v_min, (float)v_max, value);
+
+    DrawCircleLines(position.x, position.y, radius, WHITE);
+
+    float startAngle = -200;
+    float endAngle = 20;
+    float fullAngle = abs(startAngle) + abs(endAngle);
+    float needleAngle = fullAngle * interpolatedValue;
+    float angleStep = (endAngle - startAngle) / (numValues - 1);
+
+    for (int i = 0; i < numValues; i++) {
+        float angle = startAngle + i * angleStep;
+        float radian = angle * DEG2RAD;
+
+        int textX = (int)((float)position.x + cosf(radian) * (radius - 25.0f));
+        int textY = (int)((float)position.y + sinf(radian) * (radius - 25) - 10);
+
+        char valText[5];
+        sprintf(valText, "%d", RPMValues[i]);
+
+        int textWidth = MeasureText(valText, 20);
+        DrawText(valText, textX - textWidth / 2, textY, 20, WHITE);
+    }
+
+    if (value <= RPMValues[numValues - 1]) {
+        for (int i = 0; i < numValues - 1; i++) {
+            if (value >= RPMValues[i] && value <= RPMValues[i + 1]) {
+                float t = (value - RPMValues[i]) / (float)(RPMValues[i + 1] - RPMValues[i]);
+                needleAngle = startAngle + i * angleStep + t * angleStep;
+                break;
+            }
+        }
+    }
+    else {
+        float extraSpeed = value - RPMValues[numValues - 1];
+        needleAngle = endAngle + (extraSpeed / 20.0f) * angleStep;
+    }
+
+    float needleRadian = needleAngle * DEG2RAD;
+    float needleLength = radius - 20.0f;
+    Vector2 needleEnd = { position.x + cosf(needleRadian) * needleLength, position.y + sinf(needleRadian) * needleLength };
+
+    DrawLineEx(Vector2{ (float)position.x, (float)position.y }, needleEnd, 5, RED);
 }
 
 void UiManager::drawSettings(GameState previousState) {
     changeGameState(GameState::InSettings);
-    DrawText("RAYDER SETTINGS", 20, 20, 20, WHITE);
+    DrawText("RAYCER SETTINGS", 20, 20, 20, WHITE);
 
     Rectangle fullscreenCheckbox = {(float)(menuWidth / 2 - 100),
                                     (float)(menuHeight / 2 - gap), 80.0f,
@@ -160,8 +204,7 @@ void UiManager::drawSettings(GameState previousState) {
                              (float)(menuHeight / 2 + gap), 200.0f, 80.0f};
 
     if (GuiButton(applyButton, "APPLY") || IsKeyPressed(KEY_ESCAPE)) {
-        if (previousState == GameState::MainMenu ||
-            previousState == GameState::InPause) {
+        if (previousState == GameState::MainMenu || previousState == GameState::InPause) {
             changeGameState(previousState);
         } else {
             changeGameState(GameState::InGame);
@@ -171,7 +214,7 @@ void UiManager::drawSettings(GameState previousState) {
 
 void UiManager::drawPauseMenu() {
     changeGameState(GameState::InPause);
-    DrawText("RAYDER PAUSE", 20, 20, 20, WHITE);
+    DrawText("RAYCER PAUSE", 20, 20, 20, WHITE);
 
     Rectangle playButton = {(float)(menuWidth / 2 - 100),
                             (float)(menuHeight / 2 - gap), 200.0f, 80.0f};
@@ -201,7 +244,7 @@ void UiManager::updateSizes() {
 
 void UiManager::initStyles() {
     Styles style;
-    GuiSetStyle(DEFAULT, TEXT_SIZE, GetScreenHeight() / 30);
+    GuiSetStyle(DEFAULT, TEXT_SIZE, GetScreenHeight() / 35);
 
     GuiSetStyle(BUTTON, BORDER_COLOR_FOCUSED, style.BORDER_COLOR);
     GuiSetStyle(BUTTON, BASE_COLOR_FOCUSED, style.FOCUSED_BASE_COLOR);
