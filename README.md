@@ -55,6 +55,16 @@ Do debugowania wykorzystane przede wszystkim są funckja `debugLog(category, tex
 
 Ten projekt był przede wszystkim okazją do nauki kolaboracji w obrębie jednego repozytorium. Potrzebne było czasami używanie niecodziennych poleceń `git`a lub rozwiązywanie konfliktów połączenia gałęzi, co nie jest spotykane w jednoosobowych projektach. Nauczyliśmy się także korzystania z narzędzia CMake w szerokim zakresie, w celu zautomatyzowania pobierania potrzebnych bibliotek czy kopiowania zasobów do katalogu `build`. Poza aspektem programistycznym warto wspomnieć o zmaganiach nad modelami, dźwiękami, czy shaderami, którym niestety nie udało się ujrzeć światła dziennego ze względu na ograniczenie czasowe.
 
+Kompilacja
+-------
+
+Do kompilacji naszego projektu wykorzystaliśmy wcześniej wspomniane narzędzie `CMake`, które pozwoliło nam ujednolicić sposób kompilacji na różnych konfiguracjach systemowych.
+- Po sklonowaniu repozytorium, utwórz katalog `build` wykorzystując komendę `mkdir build`
+- Przejdź do utworzonego folderu za pomocą `cd build`
+- Następnie należy wygenerować konfigurację CMake'a wykorzystując `cmake ..`
+- Kolejnym krokiem jest sama kompilacja gry za pomocą komendy `cmake --build ..`
+- Ostatnim krokiem jest samo uruchomienie gry (znajdującej się zazwyczaj w katalogu `build/Debug` w zależności od konfiguracji), a następnie już sama gra
+
 Obsługa
 -------
 
