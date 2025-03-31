@@ -29,6 +29,14 @@ float calculate_engine_torque(int gear, int gear_levels, float velocity) {
     return (float)gear / float(gear_levels); 
 }
 
+float Vehicle::computeRPM(float velocity, int gear, float wheel_radius, float engine_torque) {
+    const float final_drive_ratio = 4.0f;
+    float circumference = 2 * 3.14159f * wheel_radius;
+    float gear_ratio = final_drive_ratio / (float)gear; 
+    float rpm = (velocity / circumference) * 60.0f * gear_ratio;  
+    return rpm * 100;
+}
+
 Vehicle::Vehicle(std::shared_ptr<ModelWrapper> model,
                  Vector3 position,
                  float heading,

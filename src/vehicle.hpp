@@ -21,6 +21,7 @@ class Vehicle : public Rigidbody {
     int gear;
     std::vector<Wheel> wheels;
     std::unique_ptr<Controller> controller;
+    float computeRPM(float velocity, int gear, float wheel_radius, float engine_torque);
     void update(float delta_time);
     Vehicle(std::shared_ptr<ModelWrapper> model,
             Vector3 position,
