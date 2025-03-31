@@ -82,14 +82,18 @@ void Game::draw() {
         // }
         ui.drawUi(world.get(), player_id.value());
 
-        if (IsKeyPressed(KEY_F3)) { this->showDebug = !this->showDebug; } // TODO move to dedicated function
+        if (IsKeyPressed(KEY_F3)) {
+            this->show_debug = !this->show_debug;
+        }  // TODO move to dedicated function
 
-        if (!this->showDebug) return;
+        if (!this->show_debug)
+            return;
         const int debugValuesSize = 15;
         int offset = 0;
-        for (const auto &pair : debugValues) {
-            DrawText(std::format("{}: {}", pair.first, pair.second).c_str(),
-            0, offset * debugValuesSize, debugValuesSize, VIOLET); offset++;
+        for (const auto& pair : debugValues) {
+            DrawText(std::format("{}: {}", pair.first, pair.second).c_str(), 0,
+                     offset * debugValuesSize, debugValuesSize, VIOLET);
+            offset++;
         }
     }
     if (state == GameState::InPause) {
