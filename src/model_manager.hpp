@@ -7,6 +7,12 @@
 
 #include <raylib.h>
 
+// class ModelManager;
+
+// #include "game.hpp"
+
+class Game;
+
 class ModelWrapper {
    public:
     Model model;
@@ -24,4 +30,5 @@ class ModelManager {
    public:
     ModelManager();
     std::shared_ptr<ModelWrapper> getModel(std::string model_path);
+    void loadMap(std::string map_path, Game* game);
 };

@@ -1,15 +1,17 @@
 #include <cmath>
 #include <iostream>
 #include <memory>
+#include <format>
 
 #include <raylib.h>
 #include <raymath.h>
 
 #include "common.hpp"
 #include "debug.hpp"
+#include "game.hpp"
 #include "rigidbody.hpp"
 #include "vehicle.hpp"
-#include <format>
+#include "world.hpp"
 
 // Backported from https://github.com/raysan5/raylib/pull/4520 - there was no
 // stable release since that pull request
@@ -58,8 +60,8 @@ void Vehicle::update(float delta_time) {
 
     // TODO: don't hardcode it here; make it possible to drive only subset of
     // wheels (i.e. front ones only)
-    const float steering_rate = 1.2;
-    const float max_steering = 0.8;
+    const float steering_rate = 2.4;
+    const float max_steering = 0.6;
 
     // Angular momentum drag
     angular_momentum *= std::pow(0.85, delta_time);
@@ -124,13 +126,15 @@ void Vehicle::update(float delta_time) {
         // std::cerr << "delta_velocity_len = " << delta_velocity_len << '\n';
 
         // TODO: determine from tire and ground material
-        float static_friction_coef = 0.8;
-        float kinetic_friction_coef = 0.4;
+        GroundMaterial ground_mat =
+            world->getMaterialAtPosition({position.x, position.z});
+        // float static_friction_coef = 0.8;
+        // float kinetic_friction_coef = 0.4;
 
         float max_static_friction =
-            static_friction_coef * grav_force / wheels.size();
+            ground_mat.static_friction_coef * grav_force / wheels.size();
         float kinetic_friction =
-            kinetic_friction_coef * grav_force / wheels.size();
+            ground_mat.kinetic_friction_coef * grav_force / wheels.size();
 
         Vector2 friction_dir = Vector2Normalize(delta_velocity);
 

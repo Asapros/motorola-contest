@@ -1,5 +1,7 @@
+#include <iostream>
 #include <memory>
 
+#include <raylib.h>
 #include "entity.hpp"
 #include "world.hpp"
 
@@ -13,8 +15,20 @@ void World::update(float delta_time) {
 
 void World::draw() {
     DrawGrid(25, 2.0);
+
     for (auto& [entityId, entity] : entities) {
         entity->draw();
+    }
+
+    for (int i = 0; i < materials.size(); i++) {
+        for (int j = 0; j < materials.size(); j++) {
+            std::cerr << i << ',' << j << '\n';
+            DrawCube(
+                Vector3{i * grid_cell_size, 0, j * grid_cell_size},
+                grid_cell_size, 0.1, grid_cell_size,
+                getMaterialAtPosition({i * grid_cell_size, j * grid_cell_size})
+                    .color);
+        }
     }
 }
 
@@ -29,4 +43,23 @@ EntityId World::spawnEntity(std::shared_ptr<Entity> entity) {
     entity->world = this;
     this->entities.emplace(entity->eid, entity);
     return entity->eid;
+}
+
+GroundMaterial World::getMaterialAtPosition(Vector2 pos) {
+    int ix = (int)(pos.x / grid_cell_size);
+    int iy = (int)(pos.y / grid_cell_size);
+
+    if (ix < 0 || ix >= materials.size() || iy < 0 || iy >= materials.size()) {
+        return {0.2, 0.15, {255, 192, 0, 255}};
+    }
+
+    char mat_char = materials[ix][iy];
+    switch (mat_char) {
+        case '.':
+            return {0.3, 0.20, {0, 255, 0, 255}};
+        case 'x':
+            return {0.9, 0.7, {32, 32, 32, 255}};
+        default:
+            return {0.2, 0.15, {255, 192, 0, 255}};
+    }
 }

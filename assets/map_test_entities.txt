@@ -1,0 +1,5 @@
+collider 1  4  -1 -1  -1 1  1 1  1 -1
+
+entity model car_prototype.glb position 3.2 0 -11.6 heading 45
+entity model car_prototype.glb position -2.9 0 6.4
+entity model car_prototype.glb position 12.5 0 -4.6 heading 45 collider 1
