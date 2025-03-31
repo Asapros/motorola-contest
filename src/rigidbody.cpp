@@ -35,8 +35,9 @@ void Rigidbody::update(float delta_time) {
         if (entity_collidable) {
             /*std::cout << "Found collidable\n";*/
             if (checkCollision(*entity_collidable)) {
-                std::cerr << "Collision! " << eid << ", " << entity.second->eid
-                          << '\n';
+                // std::cerr << "Collision! " << eid << ", " <<
+                // entity.second->eid
+                //           << '\n';
             }
         }
     }

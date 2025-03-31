@@ -26,14 +26,17 @@ float sigmoid(float x) {
 }
 
 float calculate_engine_torque(int gear, int gear_levels, float velocity) {
-    return (float)gear / float(gear_levels); 
+    return (float)gear / float(gear_levels);
 }
 
-float Vehicle::computeRPM(float velocity, int gear, float wheel_radius, float engine_torque) {
+float Vehicle::computeRPM(float velocity,
+                          int gear,
+                          float wheel_radius,
+                          float engine_torque) {
     const float final_drive_ratio = 4.0f;
     float circumference = 2 * 3.14159f * wheel_radius;
-    float gear_ratio = final_drive_ratio / (float)gear; 
-    float rpm = (velocity / circumference) * 60.0f * gear_ratio;  
+    float gear_ratio = final_drive_ratio / (float)gear;
+    float rpm = (velocity / circumference) * 60.0f * gear_ratio;
     return rpm * 100;
 }
 
@@ -60,7 +63,7 @@ void Vehicle::update(float delta_time) {
 
     Controls controls = controller->computeControls(world, eid);
 
-    debugLog("GENERAL", std::format("{}", eid));
+    // debugLog("GENERAL", std::format("Vehicle eid: {}", eid));
     gear = controls.gear;
 
     debugValues["ctl_gear"] = std::to_string(gear);
@@ -77,10 +80,10 @@ void Vehicle::update(float delta_time) {
     debugValues["phys_direction"] = std::to_string(heading);
 
     Vector3 velocity = computeVelocity();
-    
-    engine_torque = calculate_engine_torque(
-        gear, MAX_GEAR, Vector3Length(velocity));
-    
+
+    engine_torque =
+        calculate_engine_torque(gear, MAX_GEAR, Vector3Length(velocity));
+
     debugValues["phys_engine_toruqe"] = std::to_string(engine_torque);
 
     for (uint32_t i = 0; i < wheels.size(); i++) {
