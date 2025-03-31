@@ -26,10 +26,7 @@ float sigmoid(float x) {
 }
 
 float calculate_engine_torque(int gear, int gear_levels, float velocity) {
-    float gearbox_coefficient = (float) (gear_levels - gear + 1)/ (float) gear_levels;
-    // return gearbox_coefficient;
-    return gearbox_coefficient * sigmoid(2 - 0.1 * velocity / gear);
-
+    return (float)gear / float(gear_levels); 
 }
 
 Vehicle::Vehicle(std::shared_ptr<ModelWrapper> model,
@@ -73,7 +70,7 @@ void Vehicle::update(float delta_time) {
     
     Vector3 velocity = computeVelocity();
     
-    float engine_torque = calculate_engine_torque(
+    engine_torque = calculate_engine_torque(
         gear, MAX_GEAR, Vector3Length(velocity));
     
     debugValues["phys_engine_toruqe"] = std::to_string(engine_torque);

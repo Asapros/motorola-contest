@@ -52,10 +52,18 @@ void UiManager::drawMenu() {
     }
 }
 
+float UiManager::computeRPM(float velocity, int gear, float wheel_radius, float engine_torque) {
+    const float final_drive_ratio = 4.0f;
+    float circumference = 2 * 3.14159f * wheel_radius;
+    float gear_ratio = final_drive_ratio / (float)gear; 
+    float rpm = (velocity / circumference) * 60.0f * gear_ratio;  
+    return rpm * 100;
+}
+
 void UiManager::drawUi(World* world, EntityId playerId) {
     auto player = dynamic_cast<Vehicle*>(world->entities[playerId].get());
-    // debugLog("UI", std::to_string(Vector3Length(player->computeVelocity())));
-    drawSpeedometer(Vector3Length(player->computeVelocity()), 2.0f);
+    drawSpeedometer(Vector3Length(player->computeVelocity()) * 100, player->gear);
+    drawRPMmeter(computeRPM(Vector3Length(player->computeVelocity()), player->gear, player->wheels[0].radius, player->engine_torque));
 }
 
 void UiManager::drawLeaderboard(const std::vector<PlayerInfo>& players) {

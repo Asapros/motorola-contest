@@ -28,6 +28,7 @@ class UiManager {
     int gap;
     void initStyles();
     void changeGameState(GameState state);
+    float computeRPM(float velocity, int gear, float wheel_radius, float engine_torque);
    public:
     GameState state;
     void drawMenu();

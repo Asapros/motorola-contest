@@ -17,6 +17,7 @@ struct Wheel {
 
 class Vehicle : public Rigidbody {
    public:
+    float engine_torque;
     int gear;
     std::vector<Wheel> wheels;
     std::unique_ptr<Controller> controller;
