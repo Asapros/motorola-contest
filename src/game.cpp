@@ -5,6 +5,7 @@
 
 #include <raylib.h>
 
+#include "ai.hpp"
 #include "collidable.hpp"
 #include "debug.hpp"
 #include "game.hpp"
@@ -12,21 +13,22 @@
 #include "ui.hpp"
 #include "vehicle.hpp"
 #include "world.hpp"
-#include "ai.hpp"
 
 GameState previousState;
 
 Game::Game()
-    : player_id(),
-      world(),
-      ui(UiManager()),
-      state(GameState::MainMenu) {
+    : player_id(), world(), ui(UiManager()), state(GameState::MainMenu) {
     model_manager = std::make_shared<ModelManager>();
     camera = {{30.0f, 30.0f, 30.0f},
               {0.0f, 0.0f, 0.0f},
               {0.0f, 1.0f, 0.0f},
               60.0f,
               CAMERA_ORTHOGRAPHIC};
+}
+
+Game::~Game() {
+    // Destroy World under the shared_ptr
+    world.reset();
 }
 
 void Game::update(float delta_time) {
@@ -80,7 +82,7 @@ void Game::draw() {
         // world->draw();
         // EndMode3D();
         // }
-        ui.drawUi(world.get(), player_id.value());       
+        ui.drawUi(world.get(), player_id.value());
     }
     if (state == GameState::InPause) {
         ui.drawPauseMenu();

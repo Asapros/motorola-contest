@@ -23,18 +23,22 @@ int main() {
     SetTargetFPS(60);
     InitWindow(screenWidth, screenHeight, "kubica");
     SetExitKey(0);
-    Game game = Game();
 
-    while (!WindowShouldClose()) {
-        float delta_time = GetFrameTime();
-        game.update(delta_time);
+    // Restrict scope of game variable, so it's destructed before CloseWindow()
+    {
+        Game game = Game();
 
-        BeginDrawing();
-        ClearBackground(GetColor(0x181818ff));
+        while (!WindowShouldClose()) {
+            float delta_time = GetFrameTime();
+            game.update(delta_time);
 
-        game.draw();
+            BeginDrawing();
+            ClearBackground(GetColor(0x181818ff));
 
-        EndDrawing();
+            game.draw();
+
+            EndDrawing();
+        }
     }
 
     CloseWindow();

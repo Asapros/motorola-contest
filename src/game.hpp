@@ -22,6 +22,7 @@ class Game {
     bool paused;
 
     Game();
+    ~Game();
     void update(float delta_time);
     void draw();
 };
