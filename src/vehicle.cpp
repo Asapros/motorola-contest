@@ -9,6 +9,7 @@
 #include "debug.hpp"
 #include "rigidbody.hpp"
 #include "vehicle.hpp"
+#include <format>
 
 // Backported from https://github.com/raysan5/raylib/pull/4520 - there was no
 // stable release since that pull request
@@ -16,6 +17,17 @@ float PortedVector2CrossProduct(Vector2 v1, Vector2 v2) {
     float result = (v1.x * v2.y - v1.y * v2.x);
 
     return result;
+}
+
+float sigmoid(float x) {
+    return 1/(1+std::exp(-x));
+}
+
+float calculate_engine_torque(int gear, int gear_levels, float velocity) {
+    float gearbox_coefficient = (float) (gear_levels - gear + 1)/ (float) gear_levels;
+    // return gearbox_coefficient;
+    return gearbox_coefficient * sigmoid(2 - 0.1 * velocity / gear);
+
 }
 
 Vehicle::Vehicle(std::shared_ptr<ModelWrapper> model,
@@ -46,9 +58,22 @@ void Vehicle::update(float delta_time) {
 
     // TODO: don't hardcode it here; make it possible to drive only subset of
     // wheels (i.e. front ones only)
-    const float engine_torque = 2.0;
     const float steering_rate = 1.2;
     const float max_steering = 0.8;
+
+    // Angular momentum drag
+    angular_momentum *= std::pow(0.85, delta_time);
+    debugValues["phys_ang_mom"] = std::to_string(angular_momentum);
+
+    debugValues["phys_direction"] = std::to_string(heading);
+    
+    Vector3 velocity = computeVelocity();
+    
+    float engine_torque = calculate_engine_torque(
+        gear, MAX_GEAR, Vector3Length(velocity));
+    
+    debugValues["phys_engine_toruqe"] = std::to_string(engine_torque);
+
     for (uint32_t i = 0; i < wheels.size(); i++) {
         wheels[i].angular_velocity += controls.accelerator * engine_torque *
                                       delta_time / wheels[i].moment_of_intertia;
@@ -62,13 +87,6 @@ void Vehicle::update(float delta_time) {
         }
     }
 
-    // Angular momentum drag
-    angular_momentum *= std::pow(0.85, delta_time);
-    debugValues["phys_ang_mom"] = std::to_string(angular_momentum);
-
-    debugValues["phys_direction"] = std::to_string(heading);
-
-    Vector3 velocity = computeVelocity();
 
     float grav_force = mass * GRAVITY_ACCELERATION;
 
