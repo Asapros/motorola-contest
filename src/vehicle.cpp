@@ -49,8 +49,8 @@ void Vehicle::update(float delta_time) {
     // TODO: don't hardcode it here; make it possible to drive only subset of
     // wheels (i.e. front ones only)
     const float engine_torque = 2.0;
-    const float steering_rate = 1.2;
-    const float max_steering = 0.8;
+    const float steering_rate = 2.4;
+    const float max_steering = 0.6;
     for (uint32_t i = 0; i < wheels.size(); i++) {
         wheels[i].angular_velocity += controls.accelerator * engine_torque *
                                       delta_time / wheels[i].moment_of_intertia;

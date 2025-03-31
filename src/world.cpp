@@ -56,7 +56,7 @@ GroundMaterial World::getMaterialAtPosition(Vector2 pos) {
     char mat_char = materials[ix][iy];
     switch (mat_char) {
         case '.':
-            return {0.6, 0.25, {0, 255, 0, 255}};
+            return {0.3, 0.20, {0, 255, 0, 255}};
         case 'x':
             return {0.9, 0.7, {32, 32, 32, 255}};
         default:
