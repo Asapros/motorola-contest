@@ -2,6 +2,7 @@
 
 #include <map>
 #include <memory>
+#include <vector>
 
 #include "common.hpp"
 
@@ -14,6 +15,7 @@ class World {
 
    public:
     std::map<EntityId, std::shared_ptr<Entity>> entities;
+    std::vector<std::vector<char>> materials;
 
     World();
     EntityId spawnEntity(std::shared_ptr<Entity> entity);

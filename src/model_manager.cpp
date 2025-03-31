@@ -156,4 +156,19 @@ void ModelManager::loadMap(std::string map_path, Game* game) {
     std::filesystem::path map_materials_path = assets_location;
     map_materials_path.append(map_path);
     map_materials_path.concat("_materials.txt");
+
+    std::ifstream materials_ifs(map_materials_path);
+    if (!materials_ifs.is_open()) {
+        std::cerr << "Couldn\'t load map!\n";
+        std::exit(1);
+    }
+
+    int grid_size;
+    materials_ifs >> grid_size;
+    for (int i = 0; i < grid_size; i++) {
+        for (int j = 0; j < grid_size; j++) {
+            char ch;
+            materials_ifs >> ch;
+        }
+    }
 }
