@@ -5,6 +5,7 @@
 #include "ui.hpp"
 #include "vehicle.hpp"
 #include "debug.hpp"
+#include "leaderboard.hpp"
 
 UiManager::UiManager() {
     updateSizes();
@@ -53,8 +54,26 @@ void UiManager::drawMenu() {
     }
 }
 
-void UiManager::drawUi([[maybe_unused]] World& world,
-                       [[maybe_unused]] EntityId playerId) {
+void UiManager::drawUi(const std::vector<PlayerInfo>& players) {
+
+    DrawText("Leaderboard", 20, 20, 20, WHITE);
+    
+    double firstPlayerTime = players[0].seconds;
+    
+    DrawText("POS", 20, 60, 16, WHITE);
+    DrawText("ID", 70, 60, 16, WHITE);  
+    DrawText("TIME", 140, 60, 16, WHITE);    
+
+    for (int i = 0; i < players.size(); i++) {
+        int yOffset = 80 + (i * 30);
+        DrawText(TextFormat("%u.", players[i].place), 20, yOffset, 16, WHITE);
+        DrawText(TextFormat("%i", players[i].playerId), 70, yOffset, 16, WHITE);        
+        if (i == 0) {
+            DrawText(TextFormat("%.2f s", players[i].seconds), 140, yOffset, 16, WHITE);
+        } else {
+            DrawText(TextFormat("+%.2f s", players[i].seconds - firstPlayerTime), 140, yOffset, 16, RED);
+        }
+    }
 }
 
 void UiManager::drawMeter(float value, float multiplier, float second_value, Vector2 position, float radius, const char* unit, std::vector<int> values) {

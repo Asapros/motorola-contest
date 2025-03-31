@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include "world.hpp"
 #include "raygui.h"
+#include "leaderboard.hpp"
 
 struct Styles {
     int BORDER_COLOR = 0x00FF00FF;
@@ -24,7 +25,7 @@ class UiManager {
    public:
     GameState state;
     void drawMenu();
-    void drawUi(World& world, EntityId player);
+    void drawUi(const std::vector<PlayerInfo>& players);
     void drawPauseMenu();
     void drawSettings(GameState previousState);
     void updateSizes();
