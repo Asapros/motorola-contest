@@ -15,10 +15,7 @@ UiManager::UiManager() {
 }
 
 void UiManager::drawMenu() {
-    if (IsKeyPressed(KEY_N))
-        changeGameState(GameState::InGame);
-
-    DrawText("RAYDER", 20, 20, 20, WHITE);
+    DrawText("RAYCER", 20, 20, 20, WHITE);
 
     Rectangle playButton = {(float)(menuWidth / 2 - 100),
                             (float)(menuHeight / 2 - gap), 200.0f, 80.0f};
@@ -55,8 +52,15 @@ void UiManager::drawMenu() {
 }
 
 void UiManager::drawUi(const std::vector<PlayerInfo>& players) {
+    int posTextWidth = MeasureText("POS", 16);
+    int idTextWidth = MeasureText("ID", 16);
+    int timeTextWidth = MeasureText("TIME", 16);
+    int backgroundWidth = posTextWidth + (70 - posTextWidth) + idTextWidth + (140 - idTextWidth) + timeTextWidth - 40;
+    DrawRectangle(0, 0, backgroundWidth, (80 + (30 * players.size())), GetColor(0x00000088));
 
-    DrawText("Leaderboard", 20, 20, 20, WHITE);
+    int leaderboardTextWidth = MeasureText("Leaderboard", 20);
+    int leaderboardX = (backgroundWidth - leaderboardTextWidth) / 2;
+    DrawText("Leaderboard", leaderboardX, 20, 20, WHITE);
     
     double firstPlayerTime = players[0].seconds;
     
@@ -156,7 +160,7 @@ void UiManager::drawMeter(float value, float multiplier, float second_value, Vec
 
 void UiManager::drawSettings(GameState previousState) {
     changeGameState(GameState::InSettings);
-    DrawText("RAYDER SETTINGS", 20, 20, 20, WHITE);
+    DrawText("RAYCER SETTINGS", 20, 20, 20, WHITE);
 
     Rectangle fullscreenCheckbox = {(float)(menuWidth / 2 - 100),
                                     (float)(menuHeight / 2 - gap), 80.0f,
@@ -175,7 +179,7 @@ void UiManager::drawSettings(GameState previousState) {
 
 void UiManager::drawPauseMenu() {
     changeGameState(GameState::InPause);
-    DrawText("RAYDER PAUSE", 20, 20, 20, WHITE);
+    DrawText("RAYCER PAUSE", 20, 20, 20, WHITE);
 
     Rectangle playButton = {(float)(menuWidth / 2 - 100),
                             (float)(menuHeight / 2 - gap), 200.0f, 80.0f};
@@ -205,7 +209,7 @@ void UiManager::updateSizes() {
 
 void UiManager::initStyles() {
     Styles style;
-    GuiSetStyle(DEFAULT, TEXT_SIZE, GetScreenHeight() / 30);
+    GuiSetStyle(DEFAULT, TEXT_SIZE, GetScreenHeight() / 35);
 
     GuiSetStyle(BUTTON, BORDER_COLOR_FOCUSED, style.BORDER_COLOR);
     GuiSetStyle(BUTTON, BASE_COLOR_FOCUSED, style.FOCUSED_BASE_COLOR);

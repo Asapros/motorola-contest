@@ -15,8 +15,8 @@
 #include "vehicle.hpp"
 #include "world.hpp"
 
-const int screenWidth = 640;
-const int screenHeight = 480;
+const int screenWidth = 1000;
+const int screenHeight = 840;
 
 int main() {
     SetConfigFlags(FLAG_MSAA_4X_HINT);
