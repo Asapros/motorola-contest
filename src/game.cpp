@@ -12,6 +12,7 @@
 #include "ui.hpp"
 #include "vehicle.hpp"
 #include "world.hpp"
+#include "ai.hpp"
 
 GameState previousState;
 
@@ -128,12 +129,20 @@ void Game::loadLevel(std::string level) {
     player_id = world->spawnEntity(std::dynamic_pointer_cast<Entity>(entity));
 
     // Some example objects
-    std::shared_ptr<Collidable> obstacle_1 = std::make_shared<Collidable>(
-        model_manager->getModel("car_prototype.glb"), Vector3{6.0, 0.0, 3.0},
-        0.1,
+    std::unique_ptr<Controller> ai_controller = std::make_unique<StraightGuy>();
+
+    std::shared_ptr<Vehicle> ai_player = std::make_shared<Vehicle>(
+        model_manager->getModel("car_prototype.glb"), Vector3{0.0, 0.0, 0.0},
+        0.0,
         std::vector<Vector2>{
-            {-1.0, -1.0}, {-1.0, 1.0}, {1.0, 1.0}, {1.0, -1.0}});
-    world->spawnEntity(obstacle_1);
+            {-1.0, -1.0}, {-1.0, 1.0}, {1.0, 1.0}, {1.0, -1.0}},
+        10.0, 10.0,
+        std::vector<Wheel>{{1.0, 0.0, 0.2, 0.0, {0.5, 1.0}},
+                           {1.0, 0.0, 0.2, 0.0, {0.5, -1.0}},
+                           {1.0, 0.0, 0.2, 0.0, {-0.5, 1.0}},
+                           {1.0, 0.0, 0.2, 0.0, {-0.5, -1.0}}},
+        std::move(ai_controller));
+    world->spawnEntity(ai_player);
 
     if (level != "test") {
         model_manager->loadMap(level, this);

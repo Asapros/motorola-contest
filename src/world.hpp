@@ -25,6 +25,7 @@ class World {
 
    public:
     std::map<EntityId, std::shared_ptr<Entity>> entities;
+    std::vector<Vector2> ai_line;
     std::vector<std::vector<char>> materials;
 
     World();

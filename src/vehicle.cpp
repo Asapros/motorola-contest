@@ -54,6 +54,8 @@ void Vehicle::update(float delta_time) {
     Rigidbody::update(delta_time);
 
     Controls controls = controller->computeControls(world, eid);
+
+    debugLog("GENERAL", std::format("{}", eid));
     gear = controls.gear;
 
     debugValues["ctl_gear"] = std::to_string(gear);

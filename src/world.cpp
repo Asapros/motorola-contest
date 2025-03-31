@@ -5,7 +5,7 @@
 #include "entity.hpp"
 #include "world.hpp"
 
-World::World() : next_eid(0), entities() {}
+World::World() : next_eid(0), entities(), ai_line({{1.0, 2.0}}) {}
 
 void World::update(float delta_time) {
     for (auto& [entityId, entity] : entities) {
