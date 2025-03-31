@@ -159,7 +159,8 @@ void ModelManager::loadMap(std::string map_path, Game* game) {
             ss >> ax >> ay >> bx >> by >> cx >> cy >> dx >> dy;
 
             game->world->checkpoints[checkpoint_id] =
-                CheckpointZone{{{ax, ay}, {bx, by}, {cx, cy}, {dx, dy}}};
+                CheckpointZone{{Vector2{ax, ay}, Vector2{bx, by},
+                                Vector2{cx, cy}, Vector2{dx, dy}}};
         }
     }
 

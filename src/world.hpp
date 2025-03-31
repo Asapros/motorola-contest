@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <map>
 #include <memory>
 #include <vector>
@@ -17,7 +18,7 @@ struct GroundMaterial {
 };
 
 struct CheckpointZone {
-    Vector2 vertices[4];
+    std::array<Vector2, 4> vertices;
 
     bool isPointIn(Vector2 point);
 };
@@ -38,5 +39,6 @@ class World {
     EntityId spawnEntity(std::shared_ptr<Entity> entity);
     void update(float delta_time);
     void draw();
+    GroundMaterial getMaterialAtCell(int ix, int iy);
     GroundMaterial getMaterialAtPosition(Vector2 pos);
 };

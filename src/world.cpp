@@ -44,11 +44,9 @@ void World::draw() {
     for (int i = 0; i < materials.size(); i++) {
         for (int j = 0; j < materials.size(); j++) {
             // std::cerr << i << ',' << j << '\n';
-            DrawCube(
-                Vector3{i * grid_cell_size, 0, j * grid_cell_size},
-                grid_cell_size, 0.1, grid_cell_size,
-                getMaterialAtPosition({i * grid_cell_size, j * grid_cell_size})
-                    .color);
+            DrawCube(Vector3{i * grid_cell_size, 0, j * grid_cell_size},
+                     grid_cell_size, 0.1, grid_cell_size,
+                     getMaterialAtCell(i, j).color);
         }
     }
 }
@@ -66,11 +64,9 @@ EntityId World::spawnEntity(std::shared_ptr<Entity> entity) {
     return entity->eid;
 }
 
-GroundMaterial World::getMaterialAtPosition(Vector2 pos) {
-    int ix = (int)(pos.x / grid_cell_size);
-    int iy = (int)(pos.y / grid_cell_size);
-
-    if (ix < 0 || ix >= materials.size() || iy < 0 || iy >= materials.size()) {
+GroundMaterial World::getMaterialAtCell(int ix, int iy) {
+    if (ix < 0 || ix >= (int)materials.size() || iy < 0 ||
+        iy >= (int)materials.size()) {
         return {0.2, 0.15, {255, 192, 0, 255}};
     }
 
@@ -83,4 +79,11 @@ GroundMaterial World::getMaterialAtPosition(Vector2 pos) {
         default:
             return {0.2, 0.15, {255, 192, 0, 255}};
     }
+}
+
+GroundMaterial World::getMaterialAtPosition(Vector2 pos) {
+    int ix = (int)(pos.x / grid_cell_size);
+    int iy = (int)(pos.y / grid_cell_size);
+
+    return getMaterialAtCell(ix, iy);
 }
