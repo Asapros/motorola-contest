@@ -9,8 +9,7 @@
 void rigidbody_test() {
     InitWindow(100, 100, "rigidbody_test");
     ModelManager modelManager = ModelManager();
-    std::shared_ptr<ModelWrapper> model =
-        modelManager.getModel("assets/part.obj");
+    std::shared_ptr<ModelWrapper> model = modelManager.getModel("part.obj");
     std::shared_ptr<Rigidbody> rb = std::make_shared<Rigidbody>(
         model, Vector3{0, 0, 0}, 0.0, std::vector<Vector2>(), 1.0, 1.0);
     World world;

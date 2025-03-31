@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <filesystem>
 #include <format>
 #include <iostream>
@@ -33,15 +34,34 @@ std::filesystem::path get_executable_location() {
 }
 
 ModelWrapper::ModelWrapper(std::string model_path) {
-    std::cerr << "get_executable_location() = "
-              << get_executable_location().string() << '\n';
     this->model = LoadModel(model_path.c_str());
 }
 ModelWrapper::~ModelWrapper() {
     UnloadModel(this->model);
 }
 
-ModelManager::ModelManager() {}
+ModelManager::ModelManager() {
+    exe_location = get_executable_location();
+    std::cerr << "get_executable_location() = " << exe_location.string()
+              << '\n';
+    std::filesystem::path assets_tmp = exe_location;
+    assets_tmp.append("assets");
+    if (std::filesystem::is_directory(assets_tmp)) {
+        assets_location = assets_tmp;
+    } else {
+        assets_tmp = exe_location;
+        assets_tmp.append("../assets");
+        if (std::filesystem::is_directory(assets_tmp)) {
+            assets_location = assets_tmp;
+        }
+    }
+    std::cerr << "assets_location = " << assets_location << '\n';
+
+    if (assets_location.empty()) {
+        std::cerr << "Assets directory not found!\n";
+        std::exit(1);
+    }
+}
 
 std::shared_ptr<ModelWrapper> ModelManager::getModel(std::string model_path) {
     if (models.count(model_path)) {
@@ -51,8 +71,12 @@ std::shared_ptr<ModelWrapper> ModelManager::getModel(std::string model_path) {
         }
     }
 
+    std::filesystem::path resolved_path = assets_location;
+    resolved_path.append(model_path);
+    std::cerr << "resolved_path = " << resolved_path << '\n';
+
     std::shared_ptr<ModelWrapper> new_model =
-        std::make_shared<ModelWrapper>(model_path);
+        std::make_shared<ModelWrapper>(resolved_path.string());
     models[model_path] = new_model;
     return new_model;
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <map>
 #include <memory>
 #include <string>
@@ -17,6 +18,8 @@ class ModelWrapper {
 class ModelManager {
    private:
     std::map<std::string, std::weak_ptr<ModelWrapper>> models;
+    std::filesystem::path exe_location;
+    std::filesystem::path assets_location;
 
    public:
     ModelManager();

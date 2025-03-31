@@ -119,8 +119,7 @@ void Game::loadLevel(std::string level) {
     std::unique_ptr<Controller> vehicle_controller =
         std::make_unique<PlayerController>();
     std::shared_ptr<Vehicle> entity = std::make_shared<Vehicle>(
-        modelManager.getModel("assets/car_prototype.glb"),
-        Vector3{0.0, 0.0, 0.0}, 0.0,
+        modelManager.getModel("car_prototype.glb"), Vector3{0.0, 0.0, 0.0}, 0.0,
         std::vector<Vector2>{
             {-1.0, -1.0}, {-1.0, 1.0}, {1.0, 1.0}, {1.0, -1.0}},
         10.0, 10.0,
@@ -133,8 +132,7 @@ void Game::loadLevel(std::string level) {
 
     // Some example objects
     std::shared_ptr<Collidable> obstacle_1 = std::make_shared<Collidable>(
-        modelManager.getModel("assets/car_prototype.glb"),
-        Vector3{6.0, 0.0, 3.0}, 0.1,
+        modelManager.getModel("car_prototype.glb"), Vector3{6.0, 0.0, 3.0}, 0.1,
         std::vector<Vector2>{
             {-1.0, -1.0}, {-1.0, 1.0}, {1.0, 1.0}, {1.0, -1.0}});
     world->spawnEntity(obstacle_1);
