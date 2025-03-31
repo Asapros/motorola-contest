@@ -88,6 +88,8 @@ std::shared_ptr<ModelWrapper> ModelManager::getModel(std::string model_path) {
 }
 
 void ModelManager::loadMap(std::string map_path, Game* game) {
+    debugLog("MENU", std::format("loading map '{}'", map_path));
+
     std::filesystem::path map_entities_path = assets_location;
     map_entities_path.append(map_path);
     map_entities_path.concat("_entities.txt");

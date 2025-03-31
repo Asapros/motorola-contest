@@ -36,7 +36,7 @@ void Game::update(float delta_time) {
         }
     } else if (state == GameState::InGame) {
         if (!world) {
-            this->loadLevel("test");
+            this->loadLevel("map_test");
         }
         if (IsKeyPressed(KEY_ESCAPE)) {
             state = GameState::InPause;
@@ -140,4 +140,8 @@ void Game::loadLevel(std::string level) {
         std::vector<Vector2>{
             {-1.0, -1.0}, {-1.0, 1.0}, {1.0, 1.0}, {1.0, -1.0}});
     world->spawnEntity(obstacle_1);
+
+    if (level != "test") {
+        model_manager->loadMap(level, this);
+    }
 }
