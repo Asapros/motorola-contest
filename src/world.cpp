@@ -22,7 +22,7 @@ void World::draw() {
 
     for (int i = 0; i < materials.size(); i++) {
         for (int j = 0; j < materials.size(); j++) {
-            std::cerr << i << ',' << j << '\n';
+            // std::cerr << i << ',' << j << '\n';
             DrawCube(
                 Vector3{i * grid_cell_size, 0, j * grid_cell_size},
                 grid_cell_size, 0.1, grid_cell_size,

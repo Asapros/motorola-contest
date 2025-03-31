@@ -54,7 +54,7 @@ void UiManager::drawMenu() {
 
 void UiManager::drawUi(World* world, EntityId playerId) {
     auto player = dynamic_cast<Vehicle*>(world->entities[playerId].get());
-    debugLog("UI", std::to_string(Vector3Length(player->computeVelocity())));
+    // debugLog("UI", std::to_string(Vector3Length(player->computeVelocity())));
     drawSpeedometer(Vector3Length(player->computeVelocity()), 2.0f);
 }
 
