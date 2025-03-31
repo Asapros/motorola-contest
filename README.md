@@ -62,10 +62,10 @@ Do kompilacji naszego projektu wykorzystaliśmy wcześniej wspomniane narzędzie
 - Po sklonowaniu repozytorium, utwórz katalog `build` wykorzystując komendę `mkdir build`
 - Przejdź do utworzonego folderu za pomocą `cd build`
 - Następnie należy wygenerować konfigurację CMake'a wykorzystując `cmake ..`
-- Kolejnym krokiem jest sama kompilacja gry za pomocą komendy `cmake --build ..`
+- Kolejnym krokiem jest sama kompilacja gry za pomocą komendy `cmake --build .`
 - Ostatnim krokiem jest samo uruchomienie gry (znajdującej się zazwyczaj w katalogu `build/Debug` w zależności od konfiguracji), a następnie już sama gra
 
 Obsługa
 -------
 
-Po wejściu do gry widoczne jest menu. Sekcja ustawień nie zawiera żadnej zaimplementowanej funkcjonalności. `Play` pozwala wejść do gry. Na planszy znajduje się samochód gracza i inne obiekty, lecz kolizja z nimi nie powoduje działania siły reakcji (nie zaimplementowano). Na podłożu znajduje się mapa, która jest podobnie jak położenia wcześniej wspomnianych modeli wczytywana z pliku tekstowego `map_test_...`. W celu sterowania należy użyć klawiszy `A` i `D`: skręcanie w lewo i w prawo, oraz `W` i `S`: jazda w przód i w tył. `Q` i `E` zmienia bieg, a z nim parametry takie jak siła przyspieszająca pojazd, czy maksymalna prędkość. Bieg oraz uzyskana prędkość widoczne są na prędkościomierzu w prawym dolnym rogu ekranu. W zależności od nawierzchni na zmienia się tarcie i pojazd będzie zachowywał się w inny sposób.
+Po wejściu do gry widoczne jest menu. Sekcja ustawień zawiera przełącznik dodający obsługę trybu pełnoekranowego, dla lepszych wrażeń z gry. `Play` pozwala wejść do gry. Na planszy znajduje się samochód gracza i inne obiekty, lecz kolizja z nimi nie powoduje działania siły reakcji (nie zaimplementowano). Na podłożu znajduje się mapa, która jest podobnie jak położenia wcześniej wspomnianych modeli wczytywana z pliku tekstowego `map_test_...`. W celu sterowania należy użyć klawiszy `A` i `D`: skręcanie w lewo i w prawo, oraz `W` i `S`: jazda w przód i w tył. `Q` i `E` zmienia bieg, a z nim parametry takie jak siła przyspieszająca pojazd, czy maksymalna prędkość. Bieg oraz uzyskana prędkość widoczne są na prędkościomierzu w prawym dolnym rogu ekranu. W zależności od nawierzchni na zmienia się tarcie i pojazd będzie zachowywał się w inny sposób.
