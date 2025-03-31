@@ -80,3 +80,13 @@ std::shared_ptr<ModelWrapper> ModelManager::getModel(std::string model_path) {
     models[model_path] = new_model;
     return new_model;
 }
+
+void ModelManager::loadMap(std::string map_path) {
+    std::filesystem::path map_entities_path = assets_location;
+    map_entities_path.append(map_path);
+    map_entities_path.concat("_entities.txt");
+
+    std::filesystem::path map_materials_path = assets_location;
+    map_materials_path.append(map_path);
+    map_materials_path.concat("_materials.txt");
+}

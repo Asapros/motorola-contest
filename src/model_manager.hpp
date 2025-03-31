@@ -24,4 +24,5 @@ class ModelManager {
    public:
     ModelManager();
     std::shared_ptr<ModelWrapper> getModel(std::string model_path);
+    void loadMap(std::string map_path);
 };
